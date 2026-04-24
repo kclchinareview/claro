@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Student AI Tools · Colour Your Focus</title>
+  <style>
+    /* ----- GLOBAL RESET & BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    /* Theme variables (will be overridden by JS) */
+    :root {
+      --bg: #ffffff;
+      --surface: #f9f9f9;
+      --text: #1e1e2f;
+      --text-light: #4a4a5a;
+      --border: #e2e2e8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --card-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Baby pink theme */
+    body[data-theme="pink"] {
+      --bg: #fff5f7;
+      --surface: #ffeef2;
+      --text: #3f2e35;
+      --text-light: #7a5a64;
+      --border: #fbc4d1;
+      --primary: #e8798a;
+      --primary-hover: #db6a7c;
+      --card-shadow: 0 8px 20px rgba(232, 121, 138, 0.08);
+    }
+
+    /* Mint green theme */
+    body[data-theme="mint"] {
+      --bg: #f0faf5;
+      --surface: #e4f5ec;
+      --text: #1e3a2f;
+      --text-light: #4b6b5c;
+      --border: #b8e0cc;
+      --primary: #2c9c6e;
+      --primary-hover: #23855d;
+      --card-shadow: 0 8px 20px rgba(44, 156, 110, 0.08);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    /* Layout components */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* header + theme picker */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .logo p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .theme-picker {
+      display: flex;
+      gap: 1rem;
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      border: 1px solid var(--border);
+    }
+
+    .theme-btn {
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text);
+    }
+
+    .theme-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .theme-btn:first-of-type.active {
+      background: #e8798a;
+      color: white;
+    }
+    .theme-btn:last-of-type.active {
+      background: #2c9c6e;
+      color: white;
+    }
+
+    /* tools grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.1s ease, box-shadow 0.2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+    }
+
+    .tool-card h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-card p {
+      color: var(--text-light);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.05s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* active tool demo (Magic ToDo page style) */
+    .tool-page {
+      background: var(--surface);
+      border-radius: 2rem;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      resize: vertical;
+    }
+
+    .mock-result {
+      background: var(--bg);
+      border-radius: 1.5rem;
+      padding: 1.2rem;
+      margin-top: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .back-home {
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    /* responsive */
+    @media (max-width: 700px) {
+      body { padding: 1.2rem; }
+      .top-bar { flex-direction: column; align-items: stretch; text-align: center; }
+      .theme-picker { justify-content: center; }
+      .tool-card h3 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body data-theme="pink">
+  <div class="container">
+    <!-- dynamic content will be injected here by JS SPA style, but we'll use simple page sections -->
+    <div id="app"></div>
+  </div>
+
+  <script>
+    // Simple client-side routing: show home or tool page
+    // We keep two views: 'home' and 'tool-magic-todo'
+    let currentView = 'home';   // 'home' or 'magicTodo'
+    
+    // Predefined tasks for mock / placeholder (no API yet)
+    const mockBreakdown = {
+      default: "1. Gather all materials\n2. Break the task into smaller chunks\n3. Set a timer for 15 minutes\n4. Start with the easiest part\n5. Take a 5-min break\n6. Review what you've done",
+      essay: "1. Understand the essay prompt\n2. Research and gather sources\n3. Create a thesis statement\n4. Outline main arguments\n5. Write a rough draft\n6. Revise and proofread",
+      study: "1. Review your notes\n2. Create flashcards for key terms\n3. Take a practice quiz\n4. Identify weak topics\n5. Re-study those topics\n6. Teach someone else"
+    };
+
+    function getMockSteps(taskText) {
+      const lower = taskText.toLowerCase();
+      if (lower.includes('essay') || lower.includes('paper')) return mockBreakdown.essay;
+      if (lower.includes('study') || lower.includes('exam') || lower.includes('test')) return mockBreakdown.study;
+      return mockBreakdown.default;
+    }
+
+    // Theme handling
+    function setTheme(themeName) {
+      document.body.setAttribute('data-theme', themeName);
+      localStorage.setItem('studentToolTheme', themeName);
+      // update active state on buttons
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        if (btn.dataset.theme === themeName) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    }
+
+    // Render the current view
+    function render() {
+      const app = document.getElementById('app');
+      if (!app) return;
+
+      if (currentView === 'home') {
+        app.innerHTML = `
+          <div class="top-bar">
+            <div class="logo">
+              <h1>✧ focusFlow ✧</h1>
+              <p>student-friendly AI tools · your colour, your flow</p>
+            </div>
+            <div class="theme-picker">
+              <button class="theme-btn" data-theme="pink" style="background: #ffeef2; color:#c97b8a;">🎀 Baby pink</button>
+              <button class="theme-btn" data-theme="mint" style="background: #e4f5ec; color:#2c6e4f;">🌿 Mint green</button>
+            </div>
+          </div>
+
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h3>✨ Magic ToDo</h3>
+              <p>Turn overwhelming tasks into small, actionable steps — made for student brains.</p>
+              <a href="#" class="btn" data-nav="magicTodo">Try now →</a>
+            </div>
+            <div class="tool-card">
+              <h3>📝 Formalizer</h3>
+              <p>Rephrase frantic emails or messages into professor‑ready politeness.</p>
+              <button class="btn" disabled style="opacity:0.6;">coming soon</button>
+            </div>
+            <div class="tool-card">
+              <h3>⏱️ Estimator</h3>
+              <p>How long will that assignment actually take? AI estimates + Pomodoro hints.</p>
+              <button class="btn" disabled style="opacity:0.6;">coming soon</button>
+            </div>
+            <div class="tool-card">
+              <h3>📚 Compiler</h3>
+              <p>Paste messy lecture notes → get clean bullet points + study questions.</p>
+              <button class="btn" disabled style="opacity:0.6;">coming soon</button>
+            </div>
+          </div>
+          <footer>
+            💡 pick a colour palette above — it stays with you. All core tools will be fully AI‑powered soon.<br>
+            🧠 student prototype: Magic ToDo shows a smart example (no API yet, ready for upgrade)
+          </footer>
+        `;
+      } 
+      else if (currentView === 'magicTodo') {
+        app.innerHTML = `
+          <div class="top-bar" style="margin-bottom: 1rem;">
+            <a href="#" class="back-home btn" data-nav="home" style="background: var(--surface); color: var(--primary); border:1px solid var(--border);">← back to all tools</a>
+            <div class="theme-picker">
+              <button class="theme-btn" data-theme="pink" style="background: #ffeef2; color:#c97b8a;">🎀 Baby pink</button>
+              <button class="theme-btn" data-theme="mint" style="background: #e4f5ec; color:#2c6e4f;">🌿 Mint green</button>
+            </div>
+          </div>
+          <div class="tool-page">
+            <h2>✨ Magic ToDo · break it down</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-light);">Describe a task or assignment, and we’ll generate step‑by‑step guide. (Mock demo – real AI coming after layout)</p>
+            <textarea id="taskInput" rows="3" placeholder="e.g., Write a 5-page research essay on climate change policy due next week OR study for organic chemistry final">Write a history essay about the French Revolution</textarea>
+            <button id="breakdownBtn" class="btn">✨ Break it down</button>
+            <div id="resultArea" class="mock-result">
+              <strong>✨ suggested steps:</strong><br>
+              <div id="stepList">1. Understand the essay prompt<br>2. Research and gather sources<br>3. Create a thesis statement<br>4. Outline main arguments<br>5. Write a rough draft<br>6. Revise and proofread</div>
+            </div>
+            <p style="font-size:0.8rem; margin-top:1.5rem; color: var(--text-light);">💡 Later this will call OpenAI to give you personalized steps + spiciness levels. Colour preference saved.</p>
+          </div>
+          <footer>🎓 built for students — more tools, real AI soon</footer>
+        `;
+        // attach magic todo mock logic
+        const btn = document.getElementById('breakdownBtn');
+        const textarea = document.getElementById('taskInput');
+        const stepDiv = document.getElementById('stepList');
+        if (btn && textarea && stepDiv) {
+          const updateSteps = () => {
+            const userTask = textarea.value.trim();
+            if (!userTask) {
+              stepDiv.innerHTML = "✨ Type a task to get started!";
+              return;
+            }
+            const steps = getMockSteps(userTask);
+            stepDiv.innerHTML = steps.split('\n').map(step => `✓ ${step}`).join('<br>');
+          };
+          btn.addEventListener('click', updateSteps);
+          // initial mock
+          updateSteps();
+        }
+      }
+
+      // re-attach theme buttons & navigation after each render
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const theme = btn.dataset.theme;
+          if (theme) setTheme(theme);
+        });
+      });
+      document.querySelectorAll('[data-nav]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = link.dataset.nav;
+          if (target === 'home') currentView = 'home';
+          else if (target === 'magicTodo') currentView = 'magicTodo';
+          render();
+        });
+      });
+    }
+
+    // initial load: get stored theme, set view from hash maybe (optional)
+    const savedTheme = localStorage.getItem('studentToolTheme');
+    if (savedTheme === 'mint' || savedTheme === 'pink') {
+      document.body.setAttribute('data-theme', savedTheme);
+    } else {
+      document.body.setAttribute('data-theme', 'pink'); // default pink
+    }
+    // simple routing: hash? but start with home
+    currentView = 'home';
+    render();
+  </script>
+</body>
+</html>
