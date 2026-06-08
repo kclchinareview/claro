@@ -12,9 +12,8 @@
       transition: background-colour 0.2s ease, border-colour 0.2s, colour 0.2s;
     }
 
-    /* FONT CLASSES */
+    /* FONT CLASSES (Comic Sans removed) */
     body.font-helvetica { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-    body.font-comic { font-family: "Comic Sans MS", "Comic Sans", sans-serif; }
     body.font-opendyslexic { font-family: "OpenDyslexic", "Comic Sans MS", sans-serif; }
     body.font-times { font-family: "Times New Roman", Times, serif; }
 
@@ -30,7 +29,16 @@
       --card-shadow: 0 8px 20px rgba(0,0,0,0.03);
     }
 
-    /* Colour themes (reordered, as you had) */
+    /* Colour themes – reordered: darker green first, then greens, pink, peach, etc. */
+    body[data-theme="sage"] {
+      --bg: #DDEAD4;
+      --surface: rgba(254, 252, 245, 0.92);
+      --text: #2c3e2b;
+      --text-light: #6b8760;
+      --border: #c2d5b3;
+      --primary: #8BAF7A;
+      --primary-hover: #7A9E68;
+    }
     body[data-theme="mint green"] {
       --bg: #f0faf5;
       --surface: #e4f5ec;
@@ -48,15 +56,6 @@
       --border: #a8cfc5;
       --primary: #6DAF9B;
       --primary-hover: #599885;
-    }
-    body[data-theme="sage"] {
-      --bg: #DDEAD4;
-      --surface: rgba(254, 252, 245, 0.92);
-      --text: #2c3e2b;
-      --text-light: #6b8760;
-      --border: #c2d5b3;
-      --primary: #8BAF7A;
-      --primary-hover: #7A9E68;
     }
     body[data-theme="dew"] {
       --bg: #C9E4C5;
@@ -135,7 +134,7 @@
       margin: 0 auto;
     }
 
-    /* Header – exactly as you had it */
+    /* Header */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -214,11 +213,10 @@
     }
     .font-btn:hover { transform: translateY(-2px); }
 
-    /* New navigation buttons (only addition) */
-    .nav-buttons {
+    /* Single navigation button at top */
+    .top-nav {
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
       margin: 1rem 0 2rem;
     }
     .nav-btn {
@@ -239,6 +237,26 @@
       background: var(--primary);
       color: white;
       border-color: var(--primary);
+    }
+
+    /* Jump button inside academic section */
+    .jump-button {
+      display: inline-block;
+      margin: 1rem 0 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .jump-button:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
     }
 
     /* Section titles */
@@ -345,7 +363,6 @@
       .controls { align-items: stretch; }
       .theme-picker-row { justify-content: center; }
       .section-title { font-size: 1.3rem; }
-      .nav-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
       .color-chip { width: 28px; height: 28px; }
     }
   </style>
@@ -353,7 +370,7 @@
 </head>
 <body data-theme="baby pink" class="font-helvetica">
 <div class="container">
-  <!-- Header: logo + about link + theme/font row (unchanged) -->
+  <!-- Header (unchanged) -->
   <div class="top-bar">
     <div class="logo">
       <h1>✧ aurio</h1>
@@ -365,13 +382,12 @@
     </div>
   </div>
 
-  <!-- NEW: navigation buttons (only addition) -->
-  <div class="nav-buttons">
-    <button class="nav-btn" id="navMindfulness">🌱 mindfulness & wellness</button>
-    <button class="nav-btn" id="navAcademic">📚 academic helpers</button>
+  <!-- Single button: jump to Academic helpers -->
+  <div class="top-nav">
+    <button class="nav-btn" id="academicNavBtn">📚 academic helpers →</button>
   </div>
 
-  <!-- Mindfulness section (added id) -->
+  <!-- Mindfulness section (no top button for this one) -->
   <div class="section-title" id="mindfulness">🌱 mindfulness & wellness</div>
   <div class="tools-grid">
     <div class="tool-card">
@@ -401,7 +417,7 @@
     </div>
   </div>
 
-  <!-- Academic section (added id) -->
+  <!-- Academic section -->
   <div class="section-title" id="academic">📚 academic helpers</div>
   <div class="tools-grid">
     <div class="tool-card">
@@ -424,6 +440,11 @@
       <p>turn messy lecture notes into tidy bullet points. (soon)</p>
       <button class="btn disabled" disabled>coming soon</button>
     </div>
+  </div>
+
+  <!-- Jump button to mindfulness, placed right after academic tools -->
+  <div style="text-align: center; margin: 0.5rem 0 1.5rem;">
+    <button class="jump-button" id="jumpToMindfulness">🌱 ↑ jump to mindfulness & wellness</button>
   </div>
 
   <!-- Syllabus reader link -->
@@ -451,11 +472,11 @@
 </div>
 
 <script>
-  // Colour themes list (reordered as you had)
+  // Colour themes – reordered: darker green first (sage), then mint green, mint, dew, etc.
   const colorThemes = [
+    { name: "sage", hex: "#DDEAD4" },
     { name: "mint green", hex: "#f0faf5" },
     { name: "mint", hex: "#C9E4DE" },
-    { name: "sage", hex: "#DDEAD4" },
     { name: "dew", hex: "#C9E4C5" },
     { name: "baby pink", hex: "#fff5f7" },
     { name: "peach", hex: "#FDE4CF" },
@@ -465,10 +486,9 @@
     { name: "autism friendly", hex: "#eef4fc" }
   ];
 
-  // Font options
+  // Font options – Comic Sans removed
   const fontOptions = [
     { name: "Helvetica Neue", value: "helvetica" },
-    { name: "Comic Sans", value: "comic" },
     { name: "OpenDyslexic", value: "opendyslexic" },
     { name: "Times New Roman", value: "times" }
   ];
@@ -491,7 +511,7 @@
   }
 
   function setFont(fontValue, fontName) {
-    document.body.classList.remove('font-helvetica', 'font-comic', 'font-opendyslexic', 'font-times');
+    document.body.classList.remove('font-helvetica', 'font-opendyslexic', 'font-times');
     document.body.classList.add(`font-${fontValue}`);
     localStorage.setItem('aurio_font', fontValue);
     document.querySelectorAll('.font-btn').forEach(btn => {
@@ -527,13 +547,21 @@
   const savedFontObj = fontOptions.find(f => f.value === currentFontValue) || fontOptions[0];
   setFont(savedFontObj.value, savedFontObj.name);
 
-  // Smooth scroll navigation (new)
-  document.getElementById('navMindfulness').addEventListener('click', () => {
-    document.getElementById('mindfulness').scrollIntoView({ behavior: 'smooth' });
-  });
-  document.getElementById('navAcademic').addEventListener('click', () => {
-    document.getElementById('academic').scrollIntoView({ behavior: 'smooth' });
-  });
+  // Navigation: jump to academic helpers section
+  const academicNav = document.getElementById('academicNavBtn');
+  if (academicNav) {
+    academicNav.addEventListener('click', () => {
+      document.getElementById('academic').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // Jump button from academic to mindfulness
+  const jumpToMindfulness = document.getElementById('jumpToMindfulness');
+  if (jumpToMindfulness) {
+    jumpToMindfulness.addEventListener('click', () => {
+      document.getElementById('mindfulness').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 
   // Task breaker logic (unchanged)
   const magicBtn = document.getElementById('magicTodoBtn');
