@@ -25,7 +25,7 @@
       --font-main: system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
     }
 
-    /* baby pink */
+    /* ----- all colour themes (existing + pomodoro colours) ----- */
     body[data-theme="baby pink"] {
       --bg: #fff5f7;
       --surface: #ffeef2;
@@ -35,7 +35,6 @@
       --primary: #e8798a;
       --primary-hover: #db6a7c;
     }
-    /* mint green */
     body[data-theme="mint green"] {
       --bg: #f0faf5;
       --surface: #e4f5ec;
@@ -45,7 +44,6 @@
       --primary: #2c9c6e;
       --primary-hover: #23855d;
     }
-    /* light orange */
     body[data-theme="light orange"] {
       --bg: #fff5e6;
       --surface: #ffefdb;
@@ -55,7 +53,6 @@
       --primary: #e67e22;
       --primary-hover: #d35400;
     }
-    /* paper yellow */
     body[data-theme="paper yellow"] {
       --bg: #fef9e0;
       --surface: #fffdf0;
@@ -65,7 +62,6 @@
       --primary: #c9a03d;
       --primary-hover: #b0882c;
     }
-    /* lilac */
     body[data-theme="lilac"] {
       --bg: #f7f0ff;
       --surface: #fbf8ff;
@@ -75,7 +71,6 @@
       --primary: #9b6db7;
       --primary-hover: #855aa0;
     }
-    /* autism friendly */
     body[data-theme="autism friendly"] {
       --bg: #eef4fc;
       --surface: #fafcff;
@@ -84,6 +79,70 @@
       --border: #cbdbe6;
       --primary: #6c8db0;
       --primary-hover: #5a7799;
+    }
+    /* Pomodoro colours */
+    body[data-theme="sage"] {
+      --bg: #DDEAD4;
+      --surface: rgba(254, 252, 245, 0.92);
+      --text: #2c3e2b;
+      --text-light: #6b8760;
+      --border: #c2d5b3;
+      --primary: #8BAF7A;
+      --primary-hover: #7A9E68;
+    }
+    body[data-theme="peach"] {
+      --bg: #FDE4CF;
+      --surface: rgba(255, 250, 240, 0.94);
+      --text: #5a3a2a;
+      --text-light: #c97e5a;
+      --border: #fcc8b0;
+      --primary: #E7A57A;
+      --primary-hover: #D48F64;
+    }
+    body[data-theme="lavender"] {
+      --bg: #E0D3F5;
+      --surface: rgba(253, 250, 255, 0.94);
+      --text: #4a3a6a;
+      --text-light: #7a6a9c;
+      --border: #cbb9e8;
+      --primary: #9A89C2;
+      --primary-hover: #8775AE;
+    }
+    body[data-theme="mint"] {
+      --bg: #C9E4DE;
+      --surface: rgba(245, 255, 250, 0.92);
+      --text: #2d6b5c;
+      --text-light: #4e8d7c;
+      --border: #a8cfc5;
+      --primary: #6DAF9B;
+      --primary-hover: #599885;
+    }
+    body[data-theme="dew"] {
+      --bg: #C9E4C5;
+      --surface: rgba(250, 255, 245, 0.94);
+      --text: #3a5c3a;
+      --text-light: #5f8b5c;
+      --border: #b5d3a8;
+      --primary: #7CAF6B;
+      --primary-hover: #6A995A;
+    }
+    body[data-theme="ocean"] {
+      --bg: #B0C4DE;
+      --surface: rgba(245, 250, 255, 0.94);
+      --text: #2c5778;
+      --text-light: #3a6b8c;
+      --border: #8cb0d0;
+      --primary: #5A8FBB;
+      --primary-hover: #4A7BA3;
+    }
+    body[data-theme="windhorse"] {
+      --bg: #E8DCC8;
+      --surface: rgba(253, 250, 240, 0.94);
+      --text: #5c3a1e;
+      --text-light: #9e5a3a;
+      --border: #d0c0a0;
+      --primary: #7A5C3A;
+      --primary-hover: #6B4A2E;
     }
 
     body {
@@ -308,12 +367,8 @@
     </div>
     <div class="controls">
       <a href="about.html" class="about-link">📘 about & guide</a>
-      <div class="theme-picker-row" id="colorPickerRow">
-        <!-- colour chips injected via JS -->
-      </div>
-      <div class="theme-picker-row" id="fontPickerRow">
-        <!-- font buttons injected via JS -->
-      </div>
+      <div class="theme-picker-row" id="colorPickerRow"></div>
+      <div class="theme-picker-row" id="fontPickerRow"></div>
     </div>
   </div>
 
@@ -397,27 +452,33 @@
 </div>
 
 <script>
-  // ----- Colour themes (hex values match the CSS themes) -----
+  // ----- Colour themes (existing + pomodoro) -----
   const colorThemes = [
     { name: "baby pink", hex: "#fff5f7" },
     { name: "mint green", hex: "#f0faf5" },
     { name: "light orange", hex: "#fff5e6" },
     { name: "paper yellow", hex: "#fef9e0" },
     { name: "lilac", hex: "#f7f0ff" },
-    { name: "autism friendly", hex: "#eef4fc" }
+    { name: "autism friendly", hex: "#eef4fc" },
+    { name: "sage", hex: "#DDEAD4" },
+    { name: "peach", hex: "#FDE4CF" },
+    { name: "lavender", hex: "#E0D3F5" },
+    { name: "mint", hex: "#C9E4DE" },
+    { name: "dew", hex: "#C9E4C5" },
+    { name: "ocean", hex: "#B0C4DE" },
+    { name: "windhorse", hex: "#E8DCC8" }
   ];
 
-  // Font options (display name and actual CSS font-family)
+  // Font options – Comic Sans now plain (no cursive fallback)
   const fontOptions = [
     { name: "Helvetica Neue", value: "'Helvetica Neue', Helvetica, Arial, sans-serif" },
     { name: "Arial", value: "Arial, Helvetica, sans-serif" },
     { name: "Calibri", value: "Calibri, 'Segoe UI', sans-serif" },
-    { name: "Comic Sans", value: "'Comic Sans MS', 'Comic Neue', cursive" },
+    { name: "Comic Sans", value: "'Comic Sans MS', sans-serif" },
     { name: "OpenDyslexic", value: "'OpenDyslexic', 'Comic Sans MS', sans-serif" },
     { name: "Times New Roman", value: "'Times New Roman', Times, serif" }
   ];
 
-  // Load saved preferences or set defaults
   let currentColorTheme = localStorage.getItem('aurio_theme') || "paper yellow";
   let currentFontValue = localStorage.getItem('aurio_font') || fontOptions[0].value;
 
@@ -474,7 +535,6 @@
 
   // Apply saved settings
   setColorTheme(currentColorTheme);
-  // Find the matching font object from the saved value (or use default)
   const savedFontObj = fontOptions.find(f => f.value === currentFontValue) || fontOptions[0];
   setFont(savedFontObj.value, savedFontObj.name);
 
