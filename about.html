@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#DDEAD4">
+  <title>aurio · about & guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .back-home {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-home:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .content-card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      max-width: 750px;
+      width: 100%;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid #8BAF7A;
+      padding-left: 0.8rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin: 1.5rem 0 0.8rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    p {
+      color: #3A5A2E;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .guide-step {
+      background: rgba(230, 245, 220, 0.4);
+      border-radius: 28px;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .step-icon {
+      font-size: 2rem;
+      min-width: 50px;
+      text-align: center;
+    }
+    .step-text {
+      flex: 1;
+      font-size: 0.9rem;
+    }
+    .step-text strong {
+      color: #5F7C53;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+    }
+    input, textarea {
+      background: rgba(255, 255, 245, 0.9);
+      border: 1px solid #C2D5B3;
+      border-radius: 60px;
+      padding: 0.8rem 1.2rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    textarea {
+      border-radius: 28px;
+      resize: vertical;
+    }
+    .contact-btn {
+      background: #8BAF7A;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 60px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+      font-size: 1rem;
+    }
+    .contact-btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+    .note {
+      font-size: 0.7rem;
+      color: #8DAF7A;
+      margin-top: 0.5rem;
+    }
+    hr {
+      margin: 1.5rem 0;
+      border: none;
+      height: 1px;
+      background: #DDEAD4;
+    }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      background: #EFF6EB;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      color: #5F7C53;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+    .social-links a:hover {
+      background: #DDEAD4;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+    @media (max-width: 600px) {
+      .content-card { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; }
+      .guide-step { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← back to tools</a>
+
+<div class="content-card">
+  <h1>about aurio ✨</h1>
+  <div class="subhead">a gentle, free toolkit for students and curious minds</div>
+
+  <p><strong>aurio</strong> is a 100% free, non‑profit website built with love by a girl learning tech. Every tool — from the task breaker to the breathing bubble — is designed to be <strong>clear, calming, and accessible</strong> for everyone, especially neurodivergent students.</p>
+  <p>No ads, no tracking, no hidden costs. Just a warm corner of the internet where you can organise your thoughts, take a mindful break, or roll a dice for a little nudge.</p>
+  <p>💻 This project is also my personal portfolio as I learn web development. Every line of code is a small step forward — and I'm grateful you're here.</p>
+
+  <hr>
+
+  <h2>📱 add aurio to your home screen (like an app)</h2>
+  <p>You can install this website as a web app! It will appear on your phone’s home screen and open like a native app.</p>
+
+  <h3>🍏 iOS (iPhone / iPad)</h3>
+  <div class="guide-step">
+    <div class="step-icon">1️⃣</div>
+    <div class="step-text">Open aurio in <strong>Safari</strong> (not Chrome on iOS).</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">2️⃣</div>
+    <div class="step-text">Tap the <strong>Share</strong> icon (square with arrow at the bottom of the screen).</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">3️⃣</div>
+    <div class="step-text">Scroll down and tap <strong>“Add to Home Screen”</strong>.</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">4️⃣</div>
+    <div class="step-text">Edit the name (e.g., “aurio”) and tap <strong>“Add”</strong>. The icon will appear on your home screen.</div>
+  </div>
+
+  <h3>🤖 Android (Chrome / Samsung Internet)</h3>
+  <div class="guide-step">
+    <div class="step-icon">1️⃣</div>
+    <div class="step-text">Open aurio in <strong>Chrome</strong> or <strong>Samsung Internet</strong>.</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">2️⃣</div>
+    <div class="step-text">Tap the <strong>menu</strong> (three dots) in the top‑right corner.</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">3️⃣</div>
+    <div class="step-text">Select <strong>“Add to Home screen”</strong>.</div>
+  </div>
+  <div class="guide-step">
+    <div class="step-icon">4️⃣</div>
+    <div class="step-text">Confirm the name and tap <strong>“Install”</strong>. The app icon will be added to your home screen.</div>
+  </div>
+  <p class="note">✨ Once installed, aurio will launch in its own window, without browser toolbars — just like a real app.</p>
+
+  <hr>
+
+  <h2>📬 contact & feedback</h2>
+  <p>I’d love to hear from you! If you have suggestions, found a bug, or just want to say hello, use the form below (it will open your email client).</p>
+
+  <form class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
+    <input type="text" name="name" placeholder="your name (optional)" required>
+    <input type="email" name="email" placeholder="your email (so I can reply)" required>
+    <textarea name="message" rows="4" placeholder="what would you like to say? 💬" required></textarea>
+    <button type="submit" class="contact-btn">send message ✨</button>
+  </form>
+  <p class="note">📎 The form opens your default email app. Replace <code>your.email@example.com</code> with your real email address in the HTML (look for <code>action="mailto:..."</code>).</p>
+
+  <div class="social-links">
+    <a href="https://github.com/YOUR_USERNAME/aurio" target="_blank">🐙 GitHub repo</a>
+    <a href="https://twitter.com/YOUR_HANDLE" target="_blank">🐦 Twitter</a>
+    <a href="mailto:your.email@example.com">📧 direct email</a>
+  </div>
+
+  <footer>
+    aurio · made with 🧡 and many cups of tea · 2025
+  </footer>
+</div>
+
+</body>
+</html>
