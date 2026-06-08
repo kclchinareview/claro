@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>aurio · touch drift (mobile)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background: linear-gradient(145deg, #1a2a1f 0%, #2d3e2a 100%);
+      font-family: system-ui, -apple-system, 'Inter', sans-serif;
+      padding: 0.5rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .back-link {
+      display: inline-block;
+      background: rgba(30,40,25,0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200,190,160,0.3);
+      padding: 0.6rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #d4e6c2;
+      margin-bottom: 0.8rem;
+      transition: 0.2s;
+    }
+    .card {
+      background: rgba(30,40,25,0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 48px;
+      padding: 1rem;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+      border: 1px solid rgba(200,210,170,0.2);
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      color: #eaf7e0;
+      text-align: center;
+      margin-bottom: 0.2rem;
+    }
+    .subhead {
+      color: #b8ceaa;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .palette {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .color-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,220,0.6);
+      transition: 0.1s;
+    }
+    .color-dot.active {
+      border: 3px solid white;
+      transform: scale(1.08);
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      background: rgba(50,70,40,0.7);
+      border: 1px solid rgba(180,200,140,0.4);
+      padding: 0.7rem 1.5rem;
+      border-radius: 60px;
+      color: #eaf7e0;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: 0.1s;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #1a2a1a;
+      border-radius: 32px;
+      cursor: crosshair;
+      touch-action: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      min-height: 400px;
+    }
+    .info {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #9bbd8a;
+    }
+    footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #8aa87a;
+    }
+    @media (max-width: 600px) {
+      .color-dot { width: 56px; height: 56px; }
+      .btn { padding: 0.8rem 1.8rem; font-size: 1.1rem; }
+      canvas { min-height: 500px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>✨ touch drift ✨</h1>
+    <div class="subhead">drag your finger – particles follow you. big, gentle, calming.</div>
+
+    <div class="palette" id="palette"></div>
+
+    <div class="controls">
+      <div class="btn" id="resetBtn">🍃 clear</div>
+      <div class="btn" id="soundBtn">🔊 sound off</div>
+    </div>
+
+    <canvas id="driftCanvas" width="800" height="600" style="width:100%; height:auto;"></canvas>
+    <div class="info">👆 touch and drag anywhere on the canvas – soft particles will drift behind your finger.</div>
+  </div>
+  <footer>gentle sound optional. colour changes new particles. no goals, just calm.</footer>
+</div>
+
+<script>
+  (function(){
+    const canvas = document.getElementById('driftCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 800, height = 600;
+    let particles = [];
+    let soundEnabled = false;
+    let audioCtx = null;
+    let currentColor = "#C2E0B0";
+
+    const colourOptions = ["#C2E0B0", "#E6C8A0", "#D8C3E5", "#A8D8D0", "#F0C0C0", "#B8D8E8", "#E0D0A0"];
+    function buildPalette() {
+      const container = document.getElementById('palette');
+      container.innerHTML = '';
+      colourOptions.forEach(col => {
+        const dot = document.createElement('div');
+        dot.className = 'color-dot';
+        dot.style.backgroundColor = col;
+        if (col === currentColor) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+          currentColor = col;
+          document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+        });
+        container.appendChild(dot);
+      });
+    }
+    buildPalette();
+
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const maxWidth = Math.min(800, container.clientWidth);
+      canvas.width = maxWidth;
+      canvas.height = Math.min(700, (maxWidth * 600) / 800);
+      width = canvas.width;
+      height = canvas.height;
+    }
+    window.addEventListener('resize', () => { resizeCanvas(); drawParticles(); });
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, vx, vy, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx || (Math.random() - 0.5) * 1.2;
+        this.vy = vy || (Math.random() - 0.5) * 1.2 - 0.5;
+        this.size = 6 + Math.random() * 8;
+        this.life = 1;
+        this.decay = 0.008 + Math.random() * 0.008;
+        this.color = color || currentColor;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        if (this.x < -30) this.x = width + 30;
+        if (this.x > width + 30) this.x = -30;
+        if (this.y < -30) this.y = height + 30;
+        if (this.y > height + 30) this.y = -30;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.life * 0.7;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * (0.4 + this.life * 0.6), 0, Math.PI*2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x-3, this.y-3, this.size * 0.3, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(255,245,200,0.5)";
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function addParticle(x, y, color) {
+      particles.push(new Particle(x, y, (Math.random()-0.5)*1.5, (Math.random()-0.5)*1.5, color));
+      if (particles.length > 500) particles.shift();
+    }
+
+    // initial ambient particles
+    for (let i = 0; i < 100; i++) {
+      particles.push(new Particle(Math.random() * width, Math.random() * height));
+    }
+
+    let lastX = null, lastY = null;
+    let lastTimestamp = 0;
+    function handleMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      let clientX, clientY;
+      if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+        e.preventDefault();
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      let canvasX = (clientX - rect.left) * scaleX;
+      let canvasY = (clientY - rect.top) * scaleY;
+      canvasX = Math.min(Math.max(0, canvasX), width);
+      canvasY = Math.min(Math.max(0, canvasY), height);
+      const now = Date.now();
+      if (lastX !== null && (now - lastTimestamp) > 20) {
+        const steps = Math.min(12, Math.floor(Math.hypot(canvasX - lastX, canvasY - lastY) / 6) + 1);
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const x = lastX + (canvasX - lastX) * t;
+          const y = lastY + (canvasY - lastY) * t;
+          addParticle(x, y, currentColor);
+          if (soundEnabled && Math.random() < 0.1) playSoftTone();
+        }
+      } else {
+        addParticle(canvasX, canvasY, currentColor);
+        if (soundEnabled && Math.random() < 0.1) playSoftTone();
+      }
+      lastX = canvasX;
+      lastY = canvasY;
+      lastTimestamp = now;
+    }
+    function handleEnd() {
+      lastX = null;
+      lastY = null;
+    }
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
+    canvas.addEventListener('mousedown', handleMove);
+    canvas.addEventListener('touchstart', handleMove);
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchend', handleEnd);
+    canvas.addEventListener('mouseleave', handleEnd);
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      particles = [];
+      for (let i = 0; i < 70; i++) {
+        particles.push(new Particle(Math.random() * width, Math.random() * height));
+      }
+    });
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function playSoftTone() {
+      if (!soundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 500 + Math.random() * 400;
+      gain.gain.value = 0.04;
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+      osc.stop(audioCtx.currentTime + 0.2);
+    }
+    const soundBtn = document.getElementById('soundBtn');
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundBtn.innerText = soundEnabled ? "🔊 sound on" : "🔇 sound off";
+      if (soundEnabled && !audioCtx) initAudio();
+    });
+
+    function drawParticles() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        p.draw();
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    function updateParticles() {
+      for (let i = particles.length-1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].life <= 0) particles.splice(i,1);
+      }
+      requestAnimationFrame(updateParticles);
+    }
+    drawParticles();
+    updateParticles();
+  })();
+</script>
+</body>
+</html>
