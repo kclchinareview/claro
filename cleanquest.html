@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>aurio · clean quest</title>
+  <title>aurio · clean quest ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -17,11 +17,14 @@
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       padding: 1.5rem;
       min-height: 100vh;
+      position: relative;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
+      position: relative;
+      z-index: 2;
     }
 
     .back-link {
@@ -92,6 +95,12 @@
       height: 100%;
       border-radius: 60px;
       transition: width 0.3s;
+    }
+    .motivation-message {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      color: #5F7C53;
     }
 
     .space-selector {
@@ -196,31 +205,58 @@
       text-align: center;
     }
 
+    .reset-btn {
+      background: none;
+      border: 1px solid #C2D5B3;
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+    .reset-btn:hover {
+      background: #f0d0d0;
+    }
+
     footer {
       text-align: center;
       margin-top: 2rem;
       font-size: 0.7rem;
       color: #8DAF7A;
     }
+
+    /* Pixel canvas overlay (stars) */
+    .pixel-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
     @media (max-width: 550px) {
       .card { padding: 1.2rem; }
       .task-item { flex-direction: column; align-items: stretch; }
       .task-actions { justify-content: flex-end; }
     }
   </style>
+  <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
 </head>
 <body>
+<canvas id="pixelCanvas" class="pixel-overlay"></canvas>
 <div class="container">
   <a href="index.html" class="back-link">← back to tools</a>
   <div class="card">
     <h1>✨ clean quest ✨</h1>
-    <div class="subhead">turn chores into little adventures – earn sparkles, no pressure</div>
+    <div class="subhead">turn chores into little adventures – earn sparkles, watch stars grow ✨</div>
 
     <div class="score-area">
       <div>⭐ sparkle points</div>
       <div class="sparkle-points" id="totalPoints">0</div>
       <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
-      <div id="levelText" style="font-size:0.8rem;">keep going!</div>
+      <div class="motivation-message" id="motivationMessage">✨ keep going! you've got this ✨</div>
     </div>
 
     <div class="space-selector" id="spaceSelector">
@@ -246,42 +282,114 @@
       <button id="cancelTimerBtn" style="background:none; border:1px solid; border-radius:40px; padding:0.2rem 1rem; margin-top:0.5rem;">cancel</button>
     </div>
 
+    <div style="text-align:center;">
+      <button id="resetPointsBtn" class="reset-btn">🧹 reset all points</button>
+    </div>
   </div>
-  <footer>✨ complete tasks → earn points → watch your progress grow. no streaks, just gentle wins.</footer>
+  <footer>✨ complete tasks → earn points → more stars appear. reset anytime, no pressure.</footer>
 </div>
 
 <script>
-  // Data structure: tasks per space, points per task, total points, completed tasks (for today? but we keep cumulative)
+  // ---- Star particle system (same as pomodoro) ----
+  const canvas = document.getElementById('pixelCanvas');
+  let ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  let animationId = null;
+  let particles = [];
+  let currentPoints = 0;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function drawPixelStar(x, y) {
+    const starPattern = [
+      "   X   ",
+      "  XXX  ",
+      " XXXXX ",
+      "XXXXXXX",
+      " XXXXX ",
+      "  XXX  ",
+      "   X   "
+    ];
+    ctx.fillStyle = "#FFDD88";
+    for (let row = 0; row < starPattern.length; row++) {
+      for (let col = 0; col < starPattern[row].length; col++) {
+        if (starPattern[row][col] === 'X') {
+          ctx.fillRect(x + col, y + row, 1, 1);
+        }
+      }
+    }
+  }
+
+  function drawPixelHeart(x, y) {
+    const heartPattern = [
+      "  XX  XX  ",
+      " XXXX XXXX ",
+      "XXXXXXXXXX",
+      "XXXXXXXXXX",
+      " XXXXXXXXX ",
+      "  XXXXXXX  ",
+      "   XXXXX   ",
+      "    XXX    ",
+      "     X     "
+    ];
+    ctx.fillStyle = "#F4AAB9";
+    for (let row = 0; row < heartPattern.length; row++) {
+      for (let col = 0; col < heartPattern[row].length; col++) {
+        if (heartPattern[row][col] === 'X') {
+          ctx.fillRect(x + col, y + row, 1, 1);
+        }
+      }
+    }
+  }
+
+  function generateStars(points) {
+    if (animationId) cancelAnimationFrame(animationId);
+    particles = [];
+    // number of stars scales with points: max ~80 at 200+ points
+    let starCount = Math.min(80, Math.floor(points / 3) + 5);
+    starCount = Math.max(5, starCount);
+    for (let i = 0; i < starCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.2 + 0.1,
+        type: Math.random() > 0.7 ? 'heart' : 'star'
+      });
+    }
+    function animate() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of particles) {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < -20) p.x = canvas.width + 10;
+        if (p.x > canvas.width + 20) p.x = -20;
+        if (p.y < -20) p.y = canvas.height + 20;
+        if (p.y > canvas.height + 20) p.y = -20;
+        if (p.type === 'heart') drawPixelHeart(p.x, p.y);
+        else drawPixelStar(p.x, p.y);
+      }
+      animationId = requestAnimationFrame(animate);
+    }
+    resizeCanvas();
+    animate();
+  }
+
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    generateStars(currentPoints);
+  });
+
+  // ---- Clean quest core logic ----
   let totalPoints = 0;
   let activeTimer = null;
   let timerInterval = null;
   let currentTimerTask = null;
 
-  // Load data from localStorage
-  function loadData() {
-    const savedPoints = localStorage.getItem('cleanquest_points');
-    if (savedPoints) totalPoints = parseInt(savedPoints) || 0;
-    updatePointsUI();
-  }
-
-  function savePoints() {
-    localStorage.setItem('cleanquest_points', totalPoints);
-  }
-
-  function updatePointsUI() {
-    document.getElementById('totalPoints').innerText = totalPoints;
-    // calculate progress: 0-100 points = 0-100%, beyond 100 shows 100%
-    let percent = Math.min(100, (totalPoints / 100) * 100);
-    document.getElementById('progressFill').style.width = percent + '%';
-    let levelText = '';
-    if (totalPoints < 20) levelText = '🌱 just starting';
-    else if (totalPoints < 50) levelText = '🌟 getting sparkly';
-    else if (totalPoints < 100) levelText = '✨ cleaning hero!';
-    else levelText = '🏆 master of sparkles';
-    document.getElementById('levelText').innerText = levelText;
-  }
-
-  // Task definitions per space (default)
   const defaultTasks = {
     bedroom: [
       { name: "make bed", points: 5 },
@@ -321,16 +429,51 @@
   };
 
   let currentSpace = 'bedroom';
-  let tasks = JSON.parse(JSON.stringify(defaultTasks)); // copy
+  let tasks = JSON.parse(JSON.stringify(defaultTasks));
 
-  // Load custom tasks from localStorage
+  function loadPoints() {
+    const saved = localStorage.getItem('cleanquest_points');
+    if (saved) totalPoints = parseInt(saved) || 0;
+    currentPoints = totalPoints;
+    updatePointsUI();
+    generateStars(totalPoints);
+  }
+
+  function savePoints() {
+    localStorage.setItem('cleanquest_points', totalPoints);
+    currentPoints = totalPoints;
+    updatePointsUI();
+    generateStars(totalPoints);
+  }
+
+  function updatePointsUI() {
+    document.getElementById('totalPoints').innerText = totalPoints;
+    let percent = Math.min(100, (totalPoints / 100) * 100);
+    document.getElementById('progressFill').style.width = percent + '%';
+    let message = "";
+    if (totalPoints < 10) message = "🌱 every little task counts. you're doing great!";
+    else if (totalPoints < 30) message = "🌟 sparkles are appearing! keep going ✨";
+    else if (totalPoints < 60) message = "💫 wow! your space is getting so nice. you're a cleaning star!";
+    else if (totalPoints < 100) message = "🏆 so many sparkles! look at the stars around you!";
+    else message = "✨✨✨ cleaning legend! you've earned a sky full of stars ✨✨✨";
+    document.getElementById('motivationMessage').innerHTML = message;
+  }
+
+  function resetPoints() {
+    if (confirm("Reset all your sparkle points? You can always earn more!")) {
+      totalPoints = 0;
+      savePoints();
+      updatePointsUI();
+      generateStars(0);
+    }
+  }
+
   function loadCustomTasks() {
     const saved = localStorage.getItem('cleanquest_customTasks');
     if (saved) {
       const custom = JSON.parse(saved);
       for (let space in custom) {
         if (tasks[space]) {
-          // merge custom tasks (avoid duplicates by name? just push)
           custom[space].forEach(t => {
             if (!tasks[space].find(ex => ex.name === t.name)) {
               tasks[space].push(t);
@@ -344,7 +487,6 @@
   function saveCustomTasks() {
     const custom = {};
     for (let space in tasks) {
-      // only save tasks that are not in defaultTasks
       const defaultNames = defaultTasks[space]?.map(d => d.name) || [];
       const extra = tasks[space].filter(t => !defaultNames.includes(t.name));
       if (extra.length) custom[space] = extra;
@@ -369,25 +511,21 @@
         <span class="task-name">${escapeHtml(task.name)} (⭐ ${task.points})</span>
         <div class="task-actions">
           <button class="timer-btn" data-name="${escapeHtml(task.name)}">⏱️ timer</button>
-          <button class="complete-btn" data-name="${escapeHtml(task.name)}" data-points="${task.points}">✔️ complete</button>
+          <button class="complete-btn" data-points="${task.points}" data-name="${escapeHtml(task.name)}">✔️ complete</button>
         </div>
       `;
       listEl.appendChild(li);
     });
-
-    // attach events
     document.querySelectorAll('.complete-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const points = parseInt(btn.dataset.points);
         totalPoints += points;
         savePoints();
-        updatePointsUI();
-        // optional: add a sparkle animation effect
+        // small animation
         btn.innerText = '✓ done!';
         setTimeout(() => { btn.innerText = '✔️ complete'; }, 1000);
       });
     });
-
     document.querySelectorAll('.timer-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const taskName = btn.dataset.name;
@@ -409,7 +547,7 @@
     const input = document.getElementById('customTaskInput');
     const taskName = input.value.trim();
     if (!taskName) return;
-    let points = 3; // default points, but could ask
+    let points = 3;
     const newTask = { name: taskName, points: points };
     if (!tasks[currentSpace]) tasks[currentSpace] = [];
     tasks[currentSpace].push(newTask);
@@ -418,15 +556,13 @@
     input.value = '';
   }
 
-  // Timer functions (simple 5 or 10 min? we'll default to 5 min but let user choose)
   let timerSecondsLeft = 0;
   function startTimer(taskName) {
     if (activeTimer) {
-      if (confirm('A timer is already running. Cancel it?')) {
-        cancelTimer();
-      } else return;
+      if (confirm('A timer is already running. Cancel it?')) cancelTimer();
+      else return;
     }
-    let minutes = 5; // default
+    let minutes = 5;
     const choice = prompt(`Set timer for "${taskName}" (minutes):`, 5);
     if (choice === null) return;
     let mins = parseInt(choice);
@@ -446,7 +582,6 @@
         activeTimer = false;
         document.getElementById('timerPanel').style.display = 'none';
         alert(`⏰ Timer done! You focused on "${taskName}" for ${mins} minutes. Great job!`);
-        // optionally give points? we already give points when clicking complete, so no auto points.
         currentTimerTask = null;
       } else {
         timerSecondsLeft--;
@@ -469,7 +604,6 @@
     document.getElementById('timerDisplay').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
   }
 
-  // Space switching
   function setSpace(space) {
     currentSpace = space;
     document.querySelectorAll('.space-btn').forEach(btn => {
@@ -479,9 +613,8 @@
     renderTasks();
   }
 
-  // Initialise
   function init() {
-    loadData();
+    loadPoints();
     loadCustomTasks();
     renderTasks();
     document.querySelectorAll('.space-btn').forEach(btn => {
@@ -489,7 +622,7 @@
     });
     document.getElementById('addCustomTaskBtn').addEventListener('click', addCustomTask);
     document.getElementById('cancelTimerBtn').addEventListener('click', cancelTimer);
-    // prevent accidental page reload on timer
+    document.getElementById('resetPointsBtn').addEventListener('click', resetPoints);
   }
   init();
 </script>
