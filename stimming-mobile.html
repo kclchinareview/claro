@@ -12,26 +12,19 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    html, body {
-      height: 100%;
-      background: linear-gradient(145deg, #1a2a1f 0%, #2d3e2a 100%);
-    }
     body {
+      background: linear-gradient(145deg, #1a2a1f 0%, #2d3e2a 100%);
+      font-family: system-ui, -apple-system, 'Inter', sans-serif;
+      padding: 0.5rem;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.5rem;
-      overflow-x: hidden;
-      touch-action: pan-x pan-y; /* prevents pull-to-refresh while dragging inside canvas */
     }
     .container {
-      width: 100%;
       max-width: 800px;
+      width: 100%;
       margin: 0 auto;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
     .back-link {
       display: inline-block;
@@ -45,7 +38,7 @@
       font-weight: 500;
       color: #d4e6c2;
       margin-bottom: 0.8rem;
-      width: fit-content;
+      transition: 0.2s;
     }
     .card {
       background: rgba(30,40,25,0.6);
@@ -54,9 +47,6 @@
       padding: 1rem;
       box-shadow: 0 20px 35px rgba(0,0,0,0.4);
       border: 1px solid rgba(200,210,170,0.2);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
     }
     h1 {
       font-size: 2rem;
@@ -112,12 +102,6 @@
     .btn:active {
       transform: scale(0.96);
     }
-    .canvas-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0; /* important for flex children to shrink */
-    }
     canvas {
       display: block;
       width: 100%;
@@ -127,9 +111,7 @@
       cursor: crosshair;
       touch-action: none;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      /* let canvas grow to fill available space, but maintain aspect ratio */
-      flex: 1;
-      min-height: 300px;
+      min-height: 400px;
     }
     .info {
       text-align: center;
@@ -139,13 +121,14 @@
     }
     footer {
       text-align: center;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       font-size: 0.75rem;
       color: #8aa87a;
     }
     @media (max-width: 600px) {
       .color-dot { width: 56px; height: 56px; }
       .btn { padding: 0.8rem 1.8rem; font-size: 1.1rem; }
+      canvas { min-height: 500px; }
     }
   </style>
 </head>
@@ -163,9 +146,7 @@
       <div class="btn" id="soundBtn">🔊 sound off</div>
     </div>
 
-    <div class="canvas-wrapper">
-      <canvas id="driftCanvas" width="800" height="600" style="width:100%; height:auto;"></canvas>
-    </div>
+    <canvas id="driftCanvas" width="800" height="600" style="width:100%; height:auto;"></canvas>
     <div class="info">👆 touch and drag anywhere on the canvas – soft particles will drift behind your finger.</div>
   </div>
   <footer>gentle sound optional. colour changes new particles. no goals, just calm.</footer>
@@ -207,7 +188,6 @@
       canvas.height = Math.min(700, (maxWidth * 600) / 800);
       width = canvas.width;
       height = canvas.height;
-      // redraw particles after resize (they stay)
     }
     window.addEventListener('resize', () => { resizeCanvas(); drawParticles(); });
     resizeCanvas();
