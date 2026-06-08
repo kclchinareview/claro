@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · clean quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 1.8rem;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .score-area {
+      background: rgba(230, 245, 220, 0.5);
+      border-radius: 40px;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .sparkle-points {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #E8798A;
+    }
+    .progress-bar-bg {
+      background: #E0EDD6;
+      border-radius: 60px;
+      height: 12px;
+      margin: 0.8rem 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #8BAF7A;
+      width: 0%;
+      height: 100%;
+      border-radius: 60px;
+      transition: width 0.3s;
+    }
+
+    .space-selector {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .space-btn {
+      background: rgba(255, 255, 245, 0.8);
+      border: 1px solid #C2D5B3;
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.1s;
+      font-size: 0.85rem;
+    }
+    .space-btn.active {
+      background: #8BAF7A;
+      color: white;
+      border-color: #8BAF7A;
+    }
+
+    .task-section {
+      margin: 1.5rem 0;
+    }
+    .task-list {
+      list-style: none;
+      margin: 1rem 0;
+    }
+    .task-item {
+      background: rgba(255, 255, 245, 0.7);
+      border-radius: 60px;
+      padding: 0.6rem 1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .task-name {
+      font-size: 0.95rem;
+    }
+    .task-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .timer-btn {
+      background: none;
+      border: 1px solid #C2D5B3;
+      border-radius: 40px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .complete-btn {
+      background: #8BAF7A;
+      border: none;
+      border-radius: 40px;
+      padding: 0.3rem 0.9rem;
+      color: white;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .complete-btn:hover, .timer-btn:hover {
+      transform: scale(1.02);
+    }
+    .custom-add {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .custom-add input {
+      flex: 1;
+      font-family: inherit;
+      border-radius: 60px;
+      border: 1px solid #C2D5B3;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,245,0.9);
+    }
+    .custom-add button {
+      background: #C2D5B3;
+      border: none;
+      border-radius: 60px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .timer-panel {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      background: rgba(230, 245, 220, 0.5);
+      border-radius: 40px;
+      display: none;
+    }
+    .timer-display {
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+    @media (max-width: 550px) {
+      .card { padding: 1.2rem; }
+      .task-item { flex-direction: column; align-items: stretch; }
+      .task-actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>✨ clean quest ✨</h1>
+    <div class="subhead">turn chores into little adventures – earn sparkles, no pressure</div>
+
+    <div class="score-area">
+      <div>⭐ sparkle points</div>
+      <div class="sparkle-points" id="totalPoints">0</div>
+      <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="levelText" style="font-size:0.8rem;">keep going!</div>
+    </div>
+
+    <div class="space-selector" id="spaceSelector">
+      <button data-space="bedroom" class="space-btn active">🛏️ bedroom</button>
+      <button data-space="desk" class="space-btn">📚 desk</button>
+      <button data-space="kitchen" class="space-btn">🍳 kitchen</button>
+      <button data-space="bathroom" class="space-btn">🚿 bathroom</button>
+      <button data-space="other" class="space-btn">✨ other</button>
+    </div>
+
+    <div class="task-section">
+      <div style="font-weight:500;">🎯 tasks for <span id="currentSpaceLabel">bedroom</span></div>
+      <ul class="task-list" id="taskList"></ul>
+      <div class="custom-add">
+        <input type="text" id="customTaskInput" placeholder="+ add your own task (e.g., 'fold clothes')">
+        <button id="addCustomTaskBtn">add</button>
+      </div>
+    </div>
+
+    <div id="timerPanel" class="timer-panel">
+      <div>⏳ timer for: <span id="timerTaskName"></span></div>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+      <button id="cancelTimerBtn" style="background:none; border:1px solid; border-radius:40px; padding:0.2rem 1rem; margin-top:0.5rem;">cancel</button>
+    </div>
+
+  </div>
+  <footer>✨ complete tasks → earn points → watch your progress grow. no streaks, just gentle wins.</footer>
+</div>
+
+<script>
+  // Data structure: tasks per space, points per task, total points, completed tasks (for today? but we keep cumulative)
+  let totalPoints = 0;
+  let activeTimer = null;
+  let timerInterval = null;
+  let currentTimerTask = null;
+
+  // Load data from localStorage
+  function loadData() {
+    const savedPoints = localStorage.getItem('cleanquest_points');
+    if (savedPoints) totalPoints = parseInt(savedPoints) || 0;
+    updatePointsUI();
+  }
+
+  function savePoints() {
+    localStorage.setItem('cleanquest_points', totalPoints);
+  }
+
+  function updatePointsUI() {
+    document.getElementById('totalPoints').innerText = totalPoints;
+    // calculate progress: 0-100 points = 0-100%, beyond 100 shows 100%
+    let percent = Math.min(100, (totalPoints / 100) * 100);
+    document.getElementById('progressFill').style.width = percent + '%';
+    let levelText = '';
+    if (totalPoints < 20) levelText = '🌱 just starting';
+    else if (totalPoints < 50) levelText = '🌟 getting sparkly';
+    else if (totalPoints < 100) levelText = '✨ cleaning hero!';
+    else levelText = '🏆 master of sparkles';
+    document.getElementById('levelText').innerText = levelText;
+  }
+
+  // Task definitions per space (default)
+  const defaultTasks = {
+    bedroom: [
+      { name: "make bed", points: 5 },
+      { name: "put away 3 items of clothing", points: 4 },
+      { name: "clear nightstand", points: 3 },
+      { name: "vacuum floor (2 min)", points: 6 },
+      { name: "open window for fresh air", points: 2 }
+    ],
+    desk: [
+      { name: "organise pens & pencils", points: 3 },
+      { name: "wipe down surface", points: 4 },
+      { name: "file loose papers", points: 5 },
+      { name: "untangle cables", points: 4 },
+      { name: "take out recycling", points: 3 }
+    ],
+    kitchen: [
+      { name: "wash 3 dishes", points: 4 },
+      { name: "wipe counter", points: 3 },
+      { name: "take out rubbish", points: 5 },
+      { name: "sweep floor", points: 5 },
+      { name: "put away dry dishes", points: 3 }
+    ],
+    bathroom: [
+      { name: "wipe sink", points: 4 },
+      { name: "put away toiletries", points: 3 },
+      { name: "take out trash", points: 4 },
+      { name: "clean mirror", points: 3 },
+      { name: "restock toilet paper", points: 2 }
+    ],
+    other: [
+      { name: "tidy one shelf", points: 4 },
+      { name: "water plants", points: 3 },
+      { name: "fluff pillows", points: 2 },
+      { name: "light a candle", points: 2 },
+      { name: "pick up 10 things from floor", points: 5 }
+    ]
+  };
+
+  let currentSpace = 'bedroom';
+  let tasks = JSON.parse(JSON.stringify(defaultTasks)); // copy
+
+  // Load custom tasks from localStorage
+  function loadCustomTasks() {
+    const saved = localStorage.getItem('cleanquest_customTasks');
+    if (saved) {
+      const custom = JSON.parse(saved);
+      for (let space in custom) {
+        if (tasks[space]) {
+          // merge custom tasks (avoid duplicates by name? just push)
+          custom[space].forEach(t => {
+            if (!tasks[space].find(ex => ex.name === t.name)) {
+              tasks[space].push(t);
+            }
+          });
+        }
+      }
+    }
+  }
+
+  function saveCustomTasks() {
+    const custom = {};
+    for (let space in tasks) {
+      // only save tasks that are not in defaultTasks
+      const defaultNames = defaultTasks[space]?.map(d => d.name) || [];
+      const extra = tasks[space].filter(t => !defaultNames.includes(t.name));
+      if (extra.length) custom[space] = extra;
+    }
+    localStorage.setItem('cleanquest_customTasks', JSON.stringify(custom));
+  }
+
+  function renderTasks() {
+    const listEl = document.getElementById('taskList');
+    const spaceLabel = document.getElementById('currentSpaceLabel');
+    spaceLabel.innerText = currentSpace;
+    const spaceTasks = tasks[currentSpace] || [];
+    if (spaceTasks.length === 0) {
+      listEl.innerHTML = '<li style="list-style:none; text-align:center;">✨ add a custom task above ✨</li>';
+      return;
+    }
+    listEl.innerHTML = '';
+    spaceTasks.forEach(task => {
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      li.innerHTML = `
+        <span class="task-name">${escapeHtml(task.name)} (⭐ ${task.points})</span>
+        <div class="task-actions">
+          <button class="timer-btn" data-name="${escapeHtml(task.name)}">⏱️ timer</button>
+          <button class="complete-btn" data-name="${escapeHtml(task.name)}" data-points="${task.points}">✔️ complete</button>
+        </div>
+      `;
+      listEl.appendChild(li);
+    });
+
+    // attach events
+    document.querySelectorAll('.complete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const points = parseInt(btn.dataset.points);
+        totalPoints += points;
+        savePoints();
+        updatePointsUI();
+        // optional: add a sparkle animation effect
+        btn.innerText = '✓ done!';
+        setTimeout(() => { btn.innerText = '✔️ complete'; }, 1000);
+      });
+    });
+
+    document.querySelectorAll('.timer-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const taskName = btn.dataset.name;
+        startTimer(taskName);
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  function addCustomTask() {
+    const input = document.getElementById('customTaskInput');
+    const taskName = input.value.trim();
+    if (!taskName) return;
+    let points = 3; // default points, but could ask
+    const newTask = { name: taskName, points: points };
+    if (!tasks[currentSpace]) tasks[currentSpace] = [];
+    tasks[currentSpace].push(newTask);
+    saveCustomTasks();
+    renderTasks();
+    input.value = '';
+  }
+
+  // Timer functions (simple 5 or 10 min? we'll default to 5 min but let user choose)
+  let timerSecondsLeft = 0;
+  function startTimer(taskName) {
+    if (activeTimer) {
+      if (confirm('A timer is already running. Cancel it?')) {
+        cancelTimer();
+      } else return;
+    }
+    let minutes = 5; // default
+    const choice = prompt(`Set timer for "${taskName}" (minutes):`, 5);
+    if (choice === null) return;
+    let mins = parseInt(choice);
+    if (isNaN(mins) || mins < 1) mins = 5;
+    if (mins > 60) mins = 60;
+    timerSecondsLeft = mins * 60;
+    currentTimerTask = taskName;
+    activeTimer = true;
+    document.getElementById('timerTaskName').innerText = taskName;
+    document.getElementById('timerPanel').style.display = 'block';
+    updateTimerDisplay();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (timerSecondsLeft <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        activeTimer = false;
+        document.getElementById('timerPanel').style.display = 'none';
+        alert(`⏰ Timer done! You focused on "${taskName}" for ${mins} minutes. Great job!`);
+        // optionally give points? we already give points when clicking complete, so no auto points.
+        currentTimerTask = null;
+      } else {
+        timerSecondsLeft--;
+        updateTimerDisplay();
+      }
+    }, 1000);
+  }
+
+  function cancelTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+    activeTimer = false;
+    document.getElementById('timerPanel').style.display = 'none';
+    currentTimerTask = null;
+  }
+
+  function updateTimerDisplay() {
+    const mins = Math.floor(timerSecondsLeft / 60);
+    const secs = timerSecondsLeft % 60;
+    document.getElementById('timerDisplay').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+  }
+
+  // Space switching
+  function setSpace(space) {
+    currentSpace = space;
+    document.querySelectorAll('.space-btn').forEach(btn => {
+      if (btn.dataset.space === space) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    renderTasks();
+  }
+
+  // Initialise
+  function init() {
+    loadData();
+    loadCustomTasks();
+    renderTasks();
+    document.querySelectorAll('.space-btn').forEach(btn => {
+      btn.addEventListener('click', () => setSpace(btn.dataset.space));
+    });
+    document.getElementById('addCustomTaskBtn').addEventListener('click', addCustomTask);
+    document.getElementById('cancelTimerBtn').addEventListener('click', cancelTimer);
+    // prevent accidental page reload on timer
+  }
+  init();
+</script>
+</body>
+</html>
