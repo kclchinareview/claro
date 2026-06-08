@@ -166,12 +166,22 @@
       color: white;
     }
 
+    /* section titles */
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin: 1.8rem 0 1rem 0;
+      color: var(--text);
+      border-left: 4px solid var(--primary);
+      padding-left: 0.8rem;
+    }
+
     /* tools grid */
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       gap: 1.8rem;
-      margin: 2rem 0 2rem;
+      margin: 1.5rem 0 2rem;
     }
 
     .tool-card {
@@ -262,96 +272,90 @@
       body { padding: 1rem; }
       .top-bar { flex-direction: column; align-items: stretch; }
       .theme-picker { justify-content: center; }
+      .section-title { font-size: 1.3rem; }
     }
   </style>
   <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
 </head>
 <body data-theme="paper yellow">
 <div class="container">
-<div class="top-bar">
-  <div class="logo">
-    <h1>✧ aurio</h1>
-    <div class="tagline">your friendly, colourful study toolkit — clear mind, bright aura</div>
-  </div>
-  <div style="display: flex; gap: 0.8rem; align-items: center;">
-    <a href="about.html" class="about-link" style="background: var(--surface); padding: 0.4rem 1rem; border-radius: 60px; text-decoration: none; color: var(--text); border: 1px solid var(--border); font-size: 0.85rem;">📘 about & guide</a>
-    <div class="theme-picker">
-      <!-- your theme buttons here -->
+  <div class="top-bar">
+    <div class="logo">
+      <h1>✧ aurio</h1>
+      <div class="tagline">your friendly, colourful study toolkit — clear mind, bright aura</div>
     </div>
-  </div>
-</div>
-    <div class="theme-picker">
-      <button class="theme-btn" data-theme="baby pink">🎀 baby pink</button>
-      <button class="theme-btn" data-theme="mint green">🌿 mint green</button>
-      <button class="theme-btn" data-theme="light orange">🍊 light orange</button>
-      <button class="theme-btn" data-theme="paper yellow">📄 paper yellow</button>
-      <button class="theme-btn" data-theme="lilac">🌸 lilac</button>
-      <button class="theme-btn" data-theme="dyslexic font">📖 dyslexic font</button>
-      <button class="theme-btn" data-theme="autism friendly">🧩 autism friendly</button>
+    <div style="display: flex; gap: 0.8rem; align-items: center;">
+      <a href="about.html" class="about-link" style="background: var(--surface); padding: 0.4rem 1rem; border-radius: 60px; text-decoration: none; color: var(--text); border: 1px solid var(--border); font-size: 0.85rem;">📘 about & guide</a>
+      <div class="theme-picker">
+        <button class="theme-btn" data-theme="baby pink">🎀 baby pink</button>
+        <button class="theme-btn" data-theme="mint green">🌿 mint green</button>
+        <button class="theme-btn" data-theme="light orange">🍊 light orange</button>
+        <button class="theme-btn" data-theme="paper yellow">📄 paper yellow</button>
+        <button class="theme-btn" data-theme="lilac">🌸 lilac</button>
+        <button class="theme-btn" data-theme="dyslexic font">📖 dyslexic font</button>
+        <button class="theme-btn" data-theme="autism friendly">🧩 autism friendly</button>
+      </div>
     </div>
   </div>
 
+  <!-- ===== MINDFULNESS & WELLNESS SECTION ===== -->
+  <div class="section-title">🌱 mindfulness & wellness</div>
   <div class="tools-grid">
-
-    <!-- pomodoro  -->
     <div class="tool-card">
-  <h3>pomodoro timer</h3>
-  <p>stay focused with gentle 25‑minute sessions and floating pixel hearts.</p>
-  <a href="pomodoro.html" class="btn">try now →</a>
-</div>
-
-    <!-- dice  -->
+      <h3>pomodoro timer</h3>
+      <p>stay focused with gentle 25‑minute sessions and floating pixel hearts.</p>
+      <a href="pomodoro.html" class="btn">try now →</a>
+    </div>
     <div class="tool-card">
-  <h3>mood dice</h3>
-  <p>roll for a gentle mood or activity suggestion — a little nudge for your day.</p>
-  <a href="mood-dice.html" class="btn">try now →</a>
-</div>
-
-     <!-- breathing  -->
+      <h3>mood dice</h3>
+      <p>roll for a gentle mood or activity suggestion — a little nudge for your day.</p>
+      <a href="mood-dice.html" class="btn">try now →</a>
+    </div>
     <div class="tool-card">
-  <h3>breathing bubble</h3>
-  <p>guided breathing with a gentle expanding circle — inhale, exhale, repeat.</p>
-  <a href="breathing.html" class="btn">try now →</a>
-</div>
-
-    <!-- kind  -->
+      <h3>breathing bubble</h3>
+      <p>guided breathing with a gentle expanding circle — inhale, exhale, repeat.</p>
+      <a href="breathing.html" class="btn">try now →</a>
+    </div>
     <div class="tool-card">
-  <h3>random acts of kindness</h3>
-  <p>gentle, low‑pressure ideas to sprinkle kindness — starting with yourself.</p>
-  <a href="kindness.html" class="btn">try now →</a>
-</div>
-
-    <!-- grat  -->
+      <h3>random acts of kindness</h3>
+      <p>gentle, low‑pressure ideas to sprinkle kindness — starting with yourself.</p>
+      <a href="kindness.html" class="btn">try now →</a>
+    </div>
     <div class="tool-card">
-  <h3>gratitude pebble</h3>
-  <p>collect small things you're grateful for — each becomes a little pebble you can revisit.</p>
-  <a href="gratitude.html" class="btn">try now →</a>
-</div>
-    
-    <!-- task breaker (active) -->
+      <h3>gratitude pebble</h3>
+      <p>collect small things you're grateful for — each becomes a little pebble you can revisit.</p>
+      <a href="gratitude.html" class="btn">try now →</a>
+    </div>
+  </div>
+
+  <!-- ===== ACADEMIC HELPERS SECTION ===== -->
+  <div class="section-title">📚 academic helpers</div>
+  <div class="tools-grid">
     <div class="tool-card">
       <h3>task breaker</h3>
       <p>turn a big task into small, clear steps — designed for student brains.</p>
       <button class="btn" id="magicTodoBtn">demo →</button>
     </div>
-    <!-- email fixer -->
     <div class="tool-card">
       <h3>email fixer</h3>
       <p>rewrite your message to sound more polite or clear. (coming soon)</p>
       <button class="btn disabled" disabled>coming soon</button>
     </div>
-    <!-- time guess -->
     <div class="tool-card">
       <h3>time guess</h3>
       <p>estimate how many hours you'll need for an assignment. (soon)</p>
       <button class="btn disabled" disabled>coming soon</button>
     </div>
-    <!-- note cleaner -->
     <div class="tool-card">
       <h3>note cleaner</h3>
       <p>turn messy lecture notes into tidy bullet points. (soon)</p>
       <button class="btn disabled" disabled>coming soon</button>
     </div>
+  </div>
+
+  <!-- syllabus reader link (placed below academic helpers as in original) -->
+  <div style="text-align: center; margin: 1rem 0;">
+    <a href="syllabus.html" class="btn" style="background: var(--surface); color: var(--primary); border: 1px solid var(--border);">📚 try syllabus reader →</a>
   </div>
 
   <!-- task breaker demo panel (mock) -->
@@ -365,10 +369,6 @@
       <div id="stepList">1. understand the essay prompt<br>2. research and gather sources<br>3. create a thesis statement<br>4. outline main arguments<br>5. write a rough draft<br>6. revise and proofread</div>
     </div>
     <a href="#" id="closeMagicTodo" class="syllabus-link" style="margin-top: 0.8rem;">← close</a>
-  </div>
-
-  <div style="text-align: center; margin: 1rem 0;">
-    <a href="syllabus.html" class="btn" style="background: var(--surface); color: var(--primary); border: 1px solid var(--border);">📚 try syllabus reader →</a>
   </div>
 
   <footer>
@@ -400,10 +400,12 @@
   const magicBtn = document.getElementById('magicTodoBtn');
   const magicPanel = document.getElementById('magicTodoPanel');
   const closePanel = document.getElementById('closeMagicTodo');
-  magicBtn.addEventListener('click', () => {
-    magicPanel.style.display = 'block';
-    magicPanel.scrollIntoView({ behavior: 'smooth' });
-  });
+  if (magicBtn && magicPanel) {
+    magicBtn.addEventListener('click', () => {
+      magicPanel.style.display = 'block';
+      magicPanel.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
   if (closePanel) {
     closePanel.addEventListener('click', (e) => {
       e.preventDefault();
