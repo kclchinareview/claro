@@ -12,110 +12,16 @@
       box-sizing: border-box;
     }
 
-    /* Default theme (sage / base) – overridden by aurio themes */
-    :root {
-      --bg-start: #DDEAD4;
-      --bg-end: #C2D5B3;
-      --card-bg: rgba(254, 252, 245, 0.92);
-      --slogan-colour: #7B9A6B;
-      --primary-btn: #8BAF7A;
-      --primary-hover: #7A9E68;
-      --timer-bg: #F5F9F0;
-      --accent: #5F7C53;
-      --text-colour: #2C3E2B;
-    }
-
-    /* aurio colour themes (same as index.html) */
-    body[data-theme="baby pink"] {
-      --bg-start: #fff5f7;
-      --bg-end: #ffeef2;
-      --card-bg: rgba(255, 238, 242, 0.94);
-      --slogan-colour: #e8798a;
-      --primary-btn: #e8798a;
-      --primary-hover: #db6a7c;
-      --timer-bg: #fff0f3;
-      --accent: #c96b7c;
-      --text-colour: #3f2e35;
-    }
-    body[data-theme="mint green"] {
-      --bg-start: #f0faf5;
-      --bg-end: #e4f5ec;
-      --card-bg: rgba(228, 245, 236, 0.94);
-      --slogan-colour: #2c9c6e;
-      --primary-btn: #2c9c6e;
-      --primary-hover: #23855d;
-      --timer-bg: #e8f3ed;
-      --accent: #1e6b4a;
-      --text-colour: #1e3a2f;
-    }
-    body[data-theme="light orange"] {
-      --bg-start: #fff5e6;
-      --bg-end: #ffefdb;
-      --card-bg: rgba(255, 239, 219, 0.94);
-      --slogan-colour: #e67e22;
-      --primary-btn: #e67e22;
-      --primary-hover: #d35400;
-      --timer-bg: #fff2e6;
-      --accent: #b85e0a;
-      --text-colour: #4a341a;
-    }
-    body[data-theme="paper yellow"] {
-      --bg-start: #fef9e0;
-      --bg-end: #fffdf0;
-      --card-bg: rgba(255, 253, 240, 0.94);
-      --slogan-colour: #c9a03d;
-      --primary-btn: #c9a03d;
-      --primary-hover: #b0882c;
-      --timer-bg: #fef8e8;
-      --accent: #9e7a2a;
-      --text-colour: #3d3a2b;
-    }
-    body[data-theme="lilac"] {
-      --bg-start: #f7f0ff;
-      --bg-end: #fbf8ff;
-      --card-bg: rgba(251, 248, 255, 0.94);
-      --slogan-colour: #9b6db7;
-      --primary-btn: #9b6db7;
-      --primary-hover: #855aa0;
-      --timer-bg: #f5efff;
-      --accent: #7a5a96;
-      --text-colour: #3a2e4a;
-    }
-    body[data-theme="dyslexic font"] {
-      --bg-start: #fdf8e7;
-      --bg-end: #fffff0;
-      --card-bg: rgba(255, 255, 240, 0.94);
-      --slogan-colour: #2c5f8a;
-      --primary-btn: #2c5f8a;
-      --primary-hover: #1e4665;
-      --timer-bg: #fefce8;
-      --accent: #1a3a50;
-      --text-colour: #1a1a1a;
-      font-family: 'OpenDyslexic', 'Comic Neue', 'Inter', sans-serif;
-    }
-    body[data-theme="autism friendly"] {
-      --bg-start: #eef4fc;
-      --bg-end: #fafcff;
-      --card-bg: rgba(250, 252, 255, 0.94);
-      --slogan-colour: #6c8db0;
-      --primary-btn: #6c8db0;
-      --primary-hover: #5a7799;
-      --timer-bg: #f0f5fa;
-      --accent: #4a6b8a;
-      --text-colour: #2c3e50;
-    }
-
     body {
       min-height: 100vh;
-      background: linear-gradient(145deg, var(--bg-start) 0%, var(--bg-end) 100%);
-      font-family: var(--font-family, 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
+      position: relative;
       transition: background 0.3s ease;
-      color: var(--text-colour);
     }
 
     .back-home {
@@ -128,10 +34,11 @@
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 500;
-      color: var(--accent);
+      color: #5F7C53;
       margin-bottom: 1rem;
       transition: 0.2s;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      z-index: 2;
     }
     .back-home:hover {
       transform: translateY(-2px);
@@ -139,7 +46,6 @@
     }
 
     .timer-card {
-      background: var(--card-bg);
       backdrop-filter: blur(2px);
       border-radius: 56px;
       padding: 2rem;
@@ -156,9 +62,9 @@
       font-size: 0.85rem;
       letter-spacing: 2px;
       text-transform: lowercase;
-      color: var(--slogan-colour);
       font-weight: 500;
       margin-bottom: 1rem;
+      transition: color 0.3s;
     }
 
     .timer-display {
@@ -166,8 +72,6 @@
       font-weight: 600;
       font-feature-settings: "tnum";
       font-variant-numeric: tabular-nums;
-      color: var(--accent);
-      background: var(--timer-bg);
       padding: 0.5rem 1rem;
       border-radius: 80px;
       display: inline-block;
@@ -175,7 +79,8 @@
       min-width: 280px;
       margin: 1rem 0;
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.02);
-      font-family: monospace;
+      font-family: 'Inter', monospace;
+      transition: background 0.3s, color 0.3s;
     }
 
     .button-group {
@@ -187,55 +92,50 @@
     }
 
     .btn {
-      background: rgba(255,255,240,0.8);
       border: none;
       padding: 0.7rem 1.5rem;
       border-radius: 60px;
       font-family: inherit;
       font-weight: 500;
       font-size: 0.9rem;
-      color: var(--accent);
       cursor: pointer;
       transition: 0.2s;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .btn-primary {
-      background: var(--primary-btn);
       color: white;
       box-shadow: 0 4px 8px rgba(100, 80, 40, 0.1);
     }
 
     .btn-primary:hover {
-      background: var(--primary-hover);
       transform: translateY(-2px);
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,240,0.95);
     }
 
     .session-counter {
       margin-top: 1.8rem;
       font-size: 0.8rem;
-      color: var(--accent);
       border-top: 1px solid rgba(0,0,0,0.1);
       padding-top: 1.2rem;
       display: inline-block;
+      transition: color 0.3s;
     }
 
     .counter-number {
       font-weight: 600;
       font-size: 1.2rem;
-      color: var(--primary-btn);
       margin-left: 0.3rem;
+      transition: color 0.3s;
     }
 
     .footer-note {
       margin-top: 1.2rem;
       font-size: 0.7rem;
-      color: var(--slogan-colour);
+      transition: color 0.3s;
     }
 
     .theme-picker {
@@ -283,14 +183,14 @@
       .back-home { font-size: 0.75rem; }
     }
   </style>
-  <!-- open dyslexic font support -->
   <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
 </head>
-<body data-theme="paper yellow">
+<body>
+
 <a href="index.html" class="back-home">← back to tools</a>
 
-<div class="timer-card">
-  <div class="slogan">focus · pause · grow</div>
+<div class="timer-card" id="timerCard">
+  <div class="slogan" id="slogan">work · rest · repeat</div>
   <div class="timer-display" id="timer">25:00</div>
   <div class="button-group">
     <button class="btn btn-primary" id="startBtn">start</button>
@@ -300,8 +200,8 @@
   <div class="session-counter">
     pomodoros completed today · <span class="counter-number" id="sessionCount">0</span>
   </div>
-  <div class="footer-note">
-    each completed session grows your focus
+  <div class="footer-note" id="footerNote">
+    focus with gentle pixels — each completed session grows your spirit
   </div>
 </div>
 
@@ -313,6 +213,8 @@
   <div class="color-chip" style="background: #f7f0ff;" data-theme="lilac" title="lilac"></div>
   <div class="color-chip" style="background: #fdf8e7;" data-theme="dyslexic font" title="dyslexic font"></div>
   <div class="color-chip" style="background: #eef4fc;" data-theme="autism friendly" title="autism friendly"></div>
+  <!-- extra: ocean theme for stars -->
+  <div class="color-chip" style="background: #B0C4DE;" data-theme="ocean" title="ocean (stars)"></div>
 </div>
 
 <canvas id="pixelCanvas" class="pixel-overlay"></canvas>
@@ -350,7 +252,6 @@
     if (timeLeft === 0) {
       sessionsCompleted++;
       saveSessionCount();
-      // subtle animation feedback
       const card = document.querySelector('.timer-card');
       card.style.transform = 'scale(0.98)';
       setTimeout(() => card.style.transform = '', 200);
@@ -399,49 +300,156 @@
   resetBtn.addEventListener('click', resetTimer);
   updateDisplay();
 
-  // ---------- THEME HANDLING (aurio style) ----------
+  // ---------- THEMES (with full CSS injection) ----------
   const themes = {
-    "baby pink": { useStars: false },
-    "mint green": { useStars: false },
-    "light orange": { useStars: false },
-    "paper yellow": { useStars: false },
-    "lilac": { useStars: false },
-    "dyslexic font": { useStars: false },
-    "autism friendly": { useStars: false }
+    "baby pink": {
+      bodyBg: "linear-gradient(145deg, #fff5f7 0%, #ffeef2 100%)",
+      cardBg: "rgba(255, 238, 242, 0.92)",
+      sloganColor: "#e8798a",
+      primaryBtn: "#e8798a",
+      primaryHover: "#db6a7c",
+      timerBg: "#fff0f3",
+      accent: "#c96b7c",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "mint green": {
+      bodyBg: "linear-gradient(145deg, #f0faf5 0%, #e4f5ec 100%)",
+      cardBg: "rgba(228, 245, 236, 0.92)",
+      sloganColor: "#2c9c6e",
+      primaryBtn: "#2c9c6e",
+      primaryHover: "#23855d",
+      timerBg: "#e8f3ed",
+      accent: "#1e6b4a",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "light orange": {
+      bodyBg: "linear-gradient(145deg, #fff5e6 0%, #ffefdb 100%)",
+      cardBg: "rgba(255, 239, 219, 0.92)",
+      sloganColor: "#e67e22",
+      primaryBtn: "#e67e22",
+      primaryHover: "#d35400",
+      timerBg: "#fff2e6",
+      accent: "#b85e0a",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "paper yellow": {
+      bodyBg: "linear-gradient(145deg, #fef9e0 0%, #fffdf0 100%)",
+      cardBg: "rgba(255, 253, 240, 0.92)",
+      sloganColor: "#c9a03d",
+      primaryBtn: "#c9a03d",
+      primaryHover: "#b0882c",
+      timerBg: "#fef8e8",
+      accent: "#9e7a2a",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "lilac": {
+      bodyBg: "linear-gradient(145deg, #f7f0ff 0%, #fbf8ff 100%)",
+      cardBg: "rgba(251, 248, 255, 0.92)",
+      sloganColor: "#9b6db7",
+      primaryBtn: "#9b6db7",
+      primaryHover: "#855aa0",
+      timerBg: "#f5efff",
+      accent: "#7a5a96",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "dyslexic font": {
+      bodyBg: "linear-gradient(145deg, #fdf8e7 0%, #fffff0 100%)",
+      cardBg: "rgba(255, 255, 240, 0.92)",
+      sloganColor: "#2c5f8a",
+      primaryBtn: "#2c5f8a",
+      primaryHover: "#1e4665",
+      timerBg: "#fefce8",
+      accent: "#1a3a50",
+      useStars: false,
+      fontFamily: "'OpenDyslexic', 'Comic Neue', 'Inter', sans-serif"
+    },
+    "autism friendly": {
+      bodyBg: "linear-gradient(145deg, #eef4fc 0%, #fafcff 100%)",
+      cardBg: "rgba(250, 252, 255, 0.92)",
+      sloganColor: "#6c8db0",
+      primaryBtn: "#6c8db0",
+      primaryHover: "#5a7799",
+      timerBg: "#f0f5fa",
+      accent: "#4a6b8a",
+      useStars: false,
+      fontFamily: "'Inter', sans-serif"
+    },
+    "ocean": {
+      bodyBg: "linear-gradient(145deg, #B0C4DE 0%, #8CB0D0 100%)",
+      cardBg: "rgba(245, 250, 255, 0.94)",
+      sloganColor: "#3A6B8C",
+      primaryBtn: "#5A8FBB",
+      primaryHover: "#4A7BA3",
+      timerBg: "#E5F0FA",
+      accent: "#2C5778",
+      useStars: true,
+      fontFamily: "'Inter', sans-serif"
+    }
   };
 
-  function setTheme(themeName) {
-    document.body.setAttribute('data-theme', themeName);
-    localStorage.setItem('aurio_pomodoro_theme', themeName);
-    // update active chip styling (optional)
-    document.querySelectorAll('.color-chip').forEach(chip => {
-      if (chip.getAttribute('data-theme') === themeName) {
-        chip.style.border = '3px solid white';
-        chip.style.boxShadow = '0 0 0 2px var(--accent)';
-      } else {
-        chip.style.border = '2px solid white';
-        chip.style.boxShadow = 'none';
-      }
+  let currentTheme = "paper yellow";
+
+  function applyTheme(themeName) {
+    const t = themes[themeName];
+    if (!t) return;
+    currentTheme = themeName;
+    document.body.style.background = t.bodyBg;
+    document.body.style.fontFamily = t.fontFamily;
+    const card = document.getElementById('timerCard');
+    if (card) card.style.background = t.cardBg;
+    const slogan = document.getElementById('slogan');
+    if (slogan) slogan.style.color = t.sloganColor;
+    const timerDiv = document.querySelector('.timer-display');
+    if (timerDiv) {
+      timerDiv.style.background = t.timerBg;
+      timerDiv.style.color = t.accent;
+    }
+    const primaryBtns = document.querySelectorAll('.btn-primary');
+    primaryBtns.forEach(btn => {
+      btn.style.background = t.primaryBtn;
     });
-    // regenerate particles based on theme preference (none use stars, but we keep hearts)
-    generateFloatingPixels(false);
+    // add hover style dynamically
+    let style = document.getElementById('dynamic-theme');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'dynamic-theme';
+      document.head.appendChild(style);
+    }
+    style.textContent = `
+      .btn-primary:hover { background: ${t.primaryHover} !important; }
+      .counter-number, .session-counter { color: ${t.accent}; }
+      .timer-display { color: ${t.accent}; }
+      .back-home { color: ${t.accent}; }
+      .footer-note { color: ${t.sloganColor}; }
+    `;
+    generateFloatingPixels(t.useStars);
   }
 
+  // load saved theme or default
   const savedTheme = localStorage.getItem('aurio_pomodoro_theme');
   if (savedTheme && themes[savedTheme]) {
-    setTheme(savedTheme);
+    applyTheme(savedTheme);
   } else {
-    setTheme('paper yellow');
+    applyTheme("paper yellow");
   }
 
+  // theme picker chips
   document.querySelectorAll('.color-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const theme = chip.getAttribute('data-theme');
-      if (theme) setTheme(theme);
+      if (theme && themes[theme]) {
+        applyTheme(theme);
+        localStorage.setItem('aurio_pomodoro_theme', theme);
+      }
     });
   });
 
-  // ---------- PIXEL HEARTS (canvas) ----------
+  // ---------- PIXEL HEARTS / STARS (canvas) ----------
   const canvas = document.getElementById('pixelCanvas');
   let ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
@@ -529,10 +537,10 @@
 
   window.addEventListener('resize', () => {
     resizeCanvas();
-    generateFloatingPixels(false);
+    generateFloatingPixels(themes[currentTheme]?.useStars || false);
   });
 
-  generateFloatingPixels(false);
+  generateFloatingPixels(themes[currentTheme]?.useStars || false);
 </script>
 </body>
 </html>
