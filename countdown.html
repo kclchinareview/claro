@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · assignment countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .add-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      background: rgba(230, 245, 220, 0.3);
+      padding: 1rem;
+      border-radius: 40px;
+    }
+    .add-section input, .add-section button {
+      font-family: inherit;
+      border-radius: 60px;
+      border: none;
+      padding: 0.7rem 1rem;
+      font-size: 0.9rem;
+    }
+    .add-section input {
+      flex: 2;
+      background: rgba(255, 255, 245, 0.9);
+      border: 1px solid #C2D5B3;
+      min-width: 150px;
+    }
+    .add-section input:focus {
+      outline: none;
+      border-color: #8BAF7A;
+    }
+    .add-btn {
+      background: #8BAF7A;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .add-btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+
+    .assignment-list {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .assignment-item {
+      background: rgba(255, 255, 245, 0.7);
+      border-radius: 60px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      transition: 0.1s;
+      border-left: 6px solid;
+    }
+    .assignment-info {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .assignment-name {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .assignment-date {
+      font-size: 0.8rem;
+      color: #6C8760;
+    }
+    .assignment-urgency {
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      background: rgba(0,0,0,0.05);
+    }
+    .assignment-actions {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .edit-btn, .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 40px;
+      transition: 0.1s;
+    }
+    .edit-btn:hover, .delete-btn:hover {
+      background: rgba(0,0,0,0.1);
+      transform: scale(1.05);
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #8DAF7A;
+      padding: 2rem;
+      font-style: italic;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .card { padding: 1.5rem; }
+      .add-section { flex-direction: column; }
+      .assignment-item { flex-direction: column; align-items: stretch; }
+      .assignment-actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>📝 assignment countdown</h1>
+    <div class="subhead">keep track of due dates — colour‑coded so you never miss one</div>
+
+    <div class="add-section">
+      <input type="text" id="assignmentName" placeholder="e.g., History essay, Math homework" autocomplete="off">
+      <input type="date" id="assignmentDue">
+      <button class="add-btn" id="addBtn">+ add assignment</button>
+    </div>
+
+    <ul class="assignment-list" id="assignmentList"></ul>
+  </div>
+  <footer>assignments are saved in your browser — close anytime, they’ll be here when you return</footer>
+</div>
+
+<script>
+  // Load from localStorage
+  let assignments = [];
+
+  function loadAssignments() {
+    const stored = localStorage.getItem('aurio_assignments');
+    if (stored) {
+      try {
+        assignments = JSON.parse(stored);
+      } catch(e) { assignments = []; }
+    }
+    renderAssignments();
+  }
+
+  function saveAssignments() {
+    localStorage.setItem('aurio_assignments', JSON.stringify(assignments));
+  }
+
+  function getUrgency(dueDateStr) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDateStr);
+    due.setHours(0, 0, 0, 0);
+    const diffTime = due - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return { text: 'overdue', color: '#E8798A' };
+    if (diffDays === 0) return { text: 'due today', color: '#E8798A' };
+    if (diffDays <= 3) return { text: `due in ${diffDays} days`, color: '#F4A15D' };
+    return { text: `due in ${diffDays} days`, color: '#8BAF7A' };
+  }
+
+  function renderAssignments() {
+    const listEl = document.getElementById('assignmentList');
+    if (!listEl) return;
+
+    // Sort by due date ascending (soonest first)
+    const sorted = [...assignments].sort((a, b) => new Date(a.due) - new Date(b.due));
+
+    if (sorted.length === 0) {
+      listEl.innerHTML = '<div class="empty-message">✨ no assignments yet — add one above ✨</div>';
+      return;
+    }
+
+    listEl.innerHTML = '';
+    sorted.forEach((assignment, idx) => {
+      const originalIdx = assignments.findIndex(a => a.id === assignment.id);
+      const urgency = getUrgency(assignment.due);
+      const li = document.createElement('li');
+      li.className = 'assignment-item';
+      li.style.borderLeftColor = urgency.color;
+      li.innerHTML = `
+        <div class="assignment-info">
+          <span class="assignment-name">${escapeHtml(assignment.name)}</span>
+          <span class="assignment-date">📅 ${assignment.due}</span>
+          <span class="assignment-urgency" style="background: ${urgency.color}20; color: ${urgency.color}">${urgency.text}</span>
+        </div>
+        <div class="assignment-actions">
+          <button class="edit-btn" data-id="${assignment.id}">✏️</button>
+          <button class="delete-btn" data-id="${assignment.id}">🗑️</button>
+        </div>
+      `;
+      listEl.appendChild(li);
+    });
+
+    // Attach event listeners to edit/delete buttons
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        const assignment = assignments.find(a => a.id === id);
+        if (assignment) {
+          const newName = prompt('Edit assignment name:', assignment.name);
+          if (newName !== null && newName.trim() !== '') {
+            assignment.name = newName.trim();
+          }
+          const newDate = prompt('Edit due date (YYYY-MM-DD):', assignment.due);
+          if (newDate !== null && newDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            assignment.due = newDate;
+          }
+          saveAssignments();
+          renderAssignments();
+        }
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        if (confirm('Delete this assignment?')) {
+          assignments = assignments.filter(a => a.id !== id);
+          saveAssignments();
+          renderAssignments();
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  function addAssignment() {
+    const nameInput = document.getElementById('assignmentName');
+    const dateInput = document.getElementById('assignmentDue');
+    const name = nameInput.value.trim();
+    const due = dateInput.value;
+
+    if (!name) {
+      alert('Please enter an assignment name.');
+      return;
+    }
+    if (!due) {
+      alert('Please select a due date.');
+      return;
+    }
+
+    const newAssignment = {
+      id: Date.now().toString(),
+      name: name,
+      due: due
+    };
+    assignments.push(newAssignment);
+    saveAssignments();
+    renderAssignments();
+    nameInput.value = '';
+    dateInput.value = '';
+  }
+
+  document.getElementById('addBtn').addEventListener('click', addAssignment);
+  // allow Enter key in name field
+  document.getElementById('assignmentName').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addAssignment();
+  });
+
+  loadAssignments();
+</script>
+</body>
+</html>
