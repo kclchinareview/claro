@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · essay outline builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 48px;
+      padding: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section {
+      background: rgba(230, 245, 220, 0.3);
+      border-radius: 32px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #4A6741;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-left: 4px solid #8BAF7A;
+      padding-left: 0.6rem;
+    }
+
+    input, textarea, .subpoint-input {
+      width: 100%;
+      font-family: inherit;
+      border-radius: 60px;
+      border: 1px solid #C2D5B3;
+      padding: 0.6rem 1rem;
+      background: rgba(255, 255, 245, 0.9);
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+    }
+    textarea {
+      border-radius: 24px;
+      resize: vertical;
+    }
+
+    .main-point {
+      background: rgba(255, 255, 245, 0.6);
+      border-radius: 28px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .main-point-header {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .main-point-header input {
+      flex: 3;
+      margin-bottom: 0;
+    }
+    .subpoints-list {
+      margin-left: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .subpoint-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .subpoint-item input {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .remove-subpoint, .remove-main {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      border-radius: 40px;
+      color: #E8798A;
+    }
+    .add-btn {
+      background: #8BAF7A;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+    .add-btn-small {
+      background: #C2D5B3;
+      border: none;
+      padding: 0.2rem 0.8rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 1rem;
+    }
+    .save-btn, .export-btn, .reset-btn {
+      background: #8BAF7A;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .reset-btn {
+      background: #E0EDD6;
+      color: #5F7C53;
+    }
+    .export-btn {
+      background: #9A89C2;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1rem; }
+      .section { padding: 0.8rem; }
+      .main-point-header { flex-direction: column; align-items: stretch; }
+      .subpoint-item { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>📝 essay outline builder</h1>
+    <div class="subhead">organise your thoughts – no AI, just structure</div>
+
+    <!-- Essay topic & thesis -->
+    <div class="section">
+      <div class="section-title">📌 essay basics</div>
+      <input type="text" id="essayTopic" placeholder="Essay title / topic" autocomplete="off">
+      <textarea id="thesis" rows="2" placeholder="Thesis statement (one sentence)"></textarea>
+    </div>
+
+    <!-- Body paragraphs (main points) -->
+    <div class="section">
+      <div class="section-title">📚 body paragraphs</div>
+      <div id="mainPointsContainer"></div>
+      <button class="add-btn" id="addMainPointBtn">+ add main point</button>
+    </div>
+
+    <!-- Introduction & Conclusion -->
+    <div class="section">
+      <div class="section-title">📖 introduction & conclusion</div>
+      <textarea id="introNotes" rows="2" placeholder="Introduction notes (hook, context, thesis)"></textarea>
+      <textarea id="conclusionNotes" rows="2" placeholder="Conclusion notes (restate thesis, summarise, final thought)"></textarea>
+    </div>
+
+    <div class="action-buttons">
+      <button class="save-btn" id="saveBtn">💾 save outline</button>
+      <button class="export-btn" id="exportBtn">📄 export as text</button>
+      <button class="reset-btn" id="resetBtn">🗑️ reset all</button>
+    </div>
+  </div>
+  <footer>your outline is saved automatically when you click save. reset clears everything.</footer>
+</div>
+
+<script>
+  // Data structure: mainPoints = array of { title: "", subpoints: [] }
+  let mainPoints = [];
+
+  // DOM elements
+  const container = document.getElementById('mainPointsContainer');
+  const essayTopicInput = document.getElementById('essayTopic');
+  const thesisInput = document.getElementById('thesis');
+  const introInput = document.getElementById('introNotes');
+  const conclusionInput = document.getElementById('conclusionNotes');
+
+  // Load from localStorage
+  function loadOutline() {
+    const saved = localStorage.getItem('aurio_essay_outline');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        essayTopicInput.value = data.topic || '';
+        thesisInput.value = data.thesis || '';
+        introInput.value = data.intro || '';
+        conclusionInput.value = data.conclusion || '';
+        mainPoints = data.mainPoints || [];
+      } catch(e) { mainPoints = []; }
+    } else {
+      // default example
+      mainPoints = [
+        { title: "First main argument", subpoints: ["Supporting evidence", "Example"] },
+        { title: "Second main argument", subpoints: ["Counter‑argument", "Rebuttal"] }
+      ];
+    }
+    renderMainPoints();
+  }
+
+  function saveOutline() {
+    const outlineData = {
+      topic: essayTopicInput.value,
+      thesis: thesisInput.value,
+      intro: introInput.value,
+      conclusion: conclusionInput.value,
+      mainPoints: mainPoints
+    };
+    localStorage.setItem('aurio_essay_outline', JSON.stringify(outlineData));
+    alert('Outline saved!');
+  }
+
+  function renderMainPoints() {
+    container.innerHTML = '';
+    mainPoints.forEach((point, idx) => {
+      const pointDiv = document.createElement('div');
+      pointDiv.className = 'main-point';
+      pointDiv.innerHTML = `
+        <div class="main-point-header">
+          <input type="text" class="main-point-title" value="${escapeHtml(point.title)}" placeholder="Main point ${idx+1}">
+          <button class="remove-main" data-idx="${idx}">🗑️</button>
+        </div>
+        <div class="subpoints-list" id="subpoints-${idx}"></div>
+        <button class="add-btn-small add-subpoint" data-idx="${idx}">+ add subpoint</button>
+      `;
+      container.appendChild(pointDiv);
+
+      // fill subpoints
+      const subContainer = pointDiv.querySelector(`.subpoints-list`);
+      point.subpoints.forEach((sp, spIdx) => {
+        const subDiv = document.createElement('div');
+        subDiv.className = 'subpoint-item';
+        subDiv.innerHTML = `
+          <input type="text" class="subpoint-text" value="${escapeHtml(sp)}" placeholder="Subpoint">
+          <button class="remove-subpoint" data-point-idx="${idx}" data-sub-idx="${spIdx}">✖️</button>
+        `;
+        subContainer.appendChild(subDiv);
+      });
+
+      // attach remove main point
+      pointDiv.querySelector('.remove-main').addEventListener('click', () => {
+        mainPoints.splice(idx, 1);
+        renderMainPoints();
+      });
+
+      // attach add subpoint
+      pointDiv.querySelector('.add-subpoint').addEventListener('click', () => {
+        mainPoints[idx].subpoints.push("");
+        renderMainPoints();
+      });
+
+      // attach subpoint text changes and removal
+      pointDiv.querySelectorAll('.subpoint-text').forEach((input, spIdx) => {
+        input.addEventListener('change', (e) => {
+          mainPoints[idx].subpoints[spIdx] = input.value;
+        });
+      });
+      pointDiv.querySelectorAll('.remove-subpoint').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const pIdx = parseInt(btn.dataset.pointIdx);
+          const sIdx = parseInt(btn.dataset.subIdx);
+          mainPoints[pIdx].subpoints.splice(sIdx, 1);
+          renderMainPoints();
+        });
+      });
+    });
+
+    // attach change events for main point titles (after render, re-query)
+    document.querySelectorAll('.main-point-title').forEach((input, idx) => {
+      input.addEventListener('change', (e) => {
+        mainPoints[idx].title = input.value;
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Add new main point
+  document.getElementById('addMainPointBtn').addEventListener('click', () => {
+    mainPoints.push({ title: "New main point", subpoints: [] });
+    renderMainPoints();
+  });
+
+  // Export as text
+  function exportOutline() {
+    let text = `ESSAY OUTLINE\n`;
+    text += `Topic: ${essayTopicInput.value}\n`;
+    text += `Thesis: ${thesisInput.value}\n\n`;
+    text += `INTRODUCTION\n${introInput.value}\n\n`;
+    text += `BODY PARAGRAPHS\n`;
+    mainPoints.forEach((point, i) => {
+      text += `${i+1}. ${point.title}\n`;
+      point.subpoints.forEach(sp => {
+        text += `   - ${sp}\n`;
+      });
+      text += `\n`;
+    });
+    text += `CONCLUSION\n${conclusionInput.value}\n`;
+    // copy to clipboard or download
+    const blob = new Blob([text], {type: 'text/plain'});
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'essay-outline.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('saveBtn').addEventListener('click', saveOutline);
+  document.getElementById('exportBtn').addEventListener('click', exportOutline);
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Reset all outline data? This cannot be undone.')) {
+      localStorage.removeItem('aurio_essay_outline');
+      mainPoints = [];
+      essayTopicInput.value = '';
+      thesisInput.value = '';
+      introInput.value = '';
+      conclusionInput.value = '';
+      renderMainPoints();
+      alert('Outline reset.');
+    }
+  });
+
+  // Auto-save on any change? optional: we'll just rely on save button
+  loadOutline();
+</script>
+</body>
+</html>
