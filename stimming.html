@@ -2,9 +2,8 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>aurio · stimming playground</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>aurio · drift</title>
   <style>
     * {
       margin: 0;
@@ -13,156 +12,116 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-
     body {
-      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(145deg, #1a2a1f 0%, #2d3e2a 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       padding: 1rem;
       min-height: 100vh;
     }
-
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
     }
-
     .back-link {
       display: inline-block;
-      background: rgba(255, 255, 245, 0.85);
+      background: rgba(30,40,25,0.7);
       backdrop-filter: blur(4px);
-      border: 1px solid rgba(200, 190, 160, 0.5);
+      border: 1px solid rgba(200,190,160,0.3);
       padding: 0.5rem 1.2rem;
       border-radius: 60px;
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 500;
-      color: #5F7C53;
+      color: #d4e6c2;
       margin-bottom: 1rem;
       transition: 0.2s;
     }
-    .back-link:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 255, 245, 0.95);
-    }
-
+    .back-link:hover { transform: translateY(-2px); background: rgba(40,55,35,0.8); }
     .card {
-      background: rgba(254, 252, 245, 0.92);
-      backdrop-filter: blur(2px);
-      border-radius: 40px;
+      background: rgba(30,40,25,0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 48px;
       padding: 1.5rem;
-      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
-      border: 1px solid rgba(255, 255, 245, 0.6);
+      box-shadow: 0 25px 40px -12px rgba(0,0,0,0.4);
+      border: 1px solid rgba(200,210,170,0.2);
     }
-
     h1 {
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #4A6741;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      color: #eaf7e0;
       margin-bottom: 0.25rem;
     }
     .subhead {
-      color: #7B9A6B;
+      color: #b8ceaa;
       font-size: 0.85rem;
       margin-bottom: 1rem;
     }
-
-    /* Mode buttons */
-    .mode-bar {
+    .controls {
       display: flex;
       justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
+      margin-bottom: 1rem;
     }
-    .mode-btn {
-      background: rgba(255, 255, 245, 0.8);
-      border: 1px solid #C2D5B3;
-      padding: 0.4rem 1rem;
+    .btn {
+      background: rgba(50,70,40,0.7);
+      border: 1px solid rgba(180,200,140,0.4);
+      padding: 0.4rem 1.2rem;
       border-radius: 60px;
+      color: #eaf7e0;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       transition: 0.1s;
     }
-    .mode-btn.active {
-      background: #8BAF7A;
-      color: white;
-      border-color: #8BAF7A;
+    .btn:hover {
+      background: #6b8c5c;
+      border-color: #b8d4a0;
     }
-
-    /* Colour palette */
     .palette {
       display: flex;
       justify-content: center;
       gap: 0.8rem;
-      margin-bottom: 1.2rem;
       flex-wrap: wrap;
+      margin-bottom: 1.2rem;
     }
-    .color-swatch {
-      width: 40px;
-      height: 40px;
+    .color-dot {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
-      border: 2px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.1s;
+      border: 2px solid rgba(255,255,220,0.6);
+      transition: 0.1s;
     }
-    .color-swatch:hover {
-      transform: scale(1.1);
-    }
-    .color-swatch.active {
-      border: 3px solid #4A6741;
-      transform: scale(1.05);
-    }
-
-    /* Canvas container */
-    .canvas-container {
-      background: rgba(240, 248, 235, 0.5);
-      border-radius: 32px;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
+    .color-dot.active {
+      border: 3px solid #fff;
+      transform: scale(1.08);
     }
     canvas {
       display: block;
       width: 100%;
       height: auto;
-      background: rgba(255, 255, 245, 0.8);
-      border-radius: 28px;
+      background: #1a2a1a;
+      border-radius: 32px;
       cursor: crosshair;
-      touch-action: none; /* improves touch handling */
+      touch-action: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
-
-    /* Controls */
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
+    .info {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: #9bbd8a;
     }
-    .sound-toggle, .clear-btn {
-      background: rgba(230, 245, 220, 0.7);
-      border: 1px solid #C2D5B3;
-      padding: 0.4rem 1.2rem;
-      border-radius: 60px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: 0.1s;
-    }
-    .sound-toggle:hover, .clear-btn:hover {
-      background: #C2D5B3;
-    }
-
     footer {
       text-align: center;
       margin-top: 1.5rem;
       font-size: 0.7rem;
-      color: #8DAF7A;
+      color: #8aa87a;
     }
-
     @media (max-width: 600px) {
       .card { padding: 1rem; }
-      .mode-btn { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
-      .color-swatch { width: 32px; height: 32px; }
+      .color-dot { width: 32px; height: 32px; }
     }
   </style>
 </head>
@@ -170,323 +129,207 @@
 <div class="container">
   <a href="index.html" class="back-link">← back to tools</a>
   <div class="card">
-    <h1>🌀 sensory stimming playground</h1>
-    <div class="subhead">gentle, repetitive movements – choose your stim, choose your colour</div>
+    <h1>🌫️ drift</h1>
+    <div class="subhead">a gentle particle field – touch or move to create soft motion</div>
 
-    <div class="mode-bar">
-      <button class="mode-btn active" data-mode="bubbles">🫧 bubbles (tap/pop)</button>
-      <button class="mode-btn" data-mode="ripples">💧 ripples (tap for rings)</button>
-      <button class="mode-btn" data-mode="spinners">🌀 spinners (drag/trace)</button>
-    </div>
-
-    <div class="palette" id="colorPalette">
-      <!-- colour swatches injected via JS -->
-    </div>
-
-    <div class="canvas-container">
-      <canvas id="stimCanvas" width="800" height="500" style="width:100%; height:auto; background: rgba(255,255,245,0.8); border-radius:28px;"></canvas>
-    </div>
+    <div class="palette" id="palette"></div>
 
     <div class="controls">
-      <div class="sound-toggle" id="soundToggle">🔊 sound on</div>
-      <div class="clear-btn" id="clearCanvas">🧽 clear all</div>
+      <div class="btn" id="resetBtn">🍃 clear all</div>
+      <div class="btn" id="soundBtn">🔊 sound off</div>
     </div>
+
+    <canvas id="driftCanvas" width="900" height="550" style="width:100%; height:auto;"></canvas>
+    <div class="info">✨ touch / drag – particles follow you. let them drift away. no goals, just calm.</div>
   </div>
-  <footer>tap or drag anywhere – stim freely. colour changes the effect. sound is optional.</footer>
+  <footer>gentle sound on/off. colour changes new particles.</footer>
 </div>
 
 <script>
-  // ---- CONFIGURATION ----
-  const canvas = document.getElementById('stimCanvas');
-  const ctx = canvas.getContext('2d');
-  let width = 800, height = 500;
-  let currentMode = 'bubbles';
-  let soundEnabled = true;
-  let currentColour = "#8BAF7A"; // default greenish
+  (function(){
+    const canvas = document.getElementById('driftCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 900, height = 550;
+    let particles = [];
+    let soundEnabled = false;  // start silent, user can enable
+    let audioCtx = null;
+    let currentColor = "#C2E0B0";
 
-  // ---- Resize canvas to maintain responsive size and correct coordinates ----
-  function resizeCanvas() {
-    const container = canvas.parentElement;
-    const maxWidth = Math.min(800, container.clientWidth);
-    canvas.width = maxWidth;
-    canvas.height = (maxWidth * 500) / 800;
-    width = canvas.width;
-    height = canvas.height;
-    // redraw current state (but we'll just clear)
-    if (currentMode === 'bubbles') drawBubbles();
-    else if (currentMode === 'ripples') drawRipples();
-    else drawSpinners();
-  }
-  window.addEventListener('resize', () => { resizeCanvas(); });
-  resizeCanvas();
-
-  // ---- Helper: get canvas coordinates from mouse/touch ----
-  function getCanvasCoords(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    let clientX, clientY;
-    if (e.touches) {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-      e.preventDefault();
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
+    // colour options (soft pastels)
+    const colourOptions = [
+      "#C2E0B0", "#E6C8A0", "#D8C3E5", "#A8D8D0", "#F0C0C0", "#B8D8E8", "#E0D0A0"
+    ];
+    function buildPalette() {
+      const container = document.getElementById('palette');
+      container.innerHTML = '';
+      colourOptions.forEach(col => {
+        const dot = document.createElement('div');
+        dot.className = 'color-dot';
+        dot.style.backgroundColor = col;
+        if (col === currentColor) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+          currentColor = col;
+          document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+        });
+        container.appendChild(dot);
+      });
     }
-    let canvasX = (clientX - rect.left) * scaleX;
-    let canvasY = (clientY - rect.top) * scaleY;
-    canvasX = Math.min(Math.max(0, canvasX), canvas.width);
-    canvasY = Math.min(Math.max(0, canvasY), canvas.height);
-    return { x: canvasX, y: canvasY };
-  }
+    buildPalette();
 
-  // ========== BUBBLES MODE ==========
-  let bubbles = [];
-  function addBubble(x, y) {
-    bubbles.push({
-      x, y, radius: 10,
-      life: 1,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: (Math.random() - 0.5) * 1.2 - 0.8,
-      color: currentColour
-    });
-  }
-  function updateBubbles() {
-    for (let i = bubbles.length-1; i >= 0; i--) {
-      let b = bubbles[i];
-      b.x += b.vx;
-      b.y += b.vy;
-      b.life -= 0.01;
-      if (b.life <= 0 || b.x < -50 || b.x > width+50 || b.y < -50 || b.y > height+50) {
-        bubbles.splice(i,1);
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const maxWidth = Math.min(900, container.clientWidth);
+      canvas.width = maxWidth;
+      canvas.height = (maxWidth * 550) / 900;
+      width = canvas.width;
+      height = canvas.height;
+    }
+    window.addEventListener('resize', () => { resizeCanvas(); drawParticles(); });
+    resizeCanvas();
+
+    // particle class
+    class Particle {
+      constructor(x, y, vx, vy, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx || (Math.random() - 0.5) * 0.6;
+        this.vy = vy || (Math.random() - 0.5) * 0.6 - 0.3;
+        this.size = 4 + Math.random() * 5;
+        this.life = 1;
+        this.decay = 0.003 + Math.random() * 0.006;
+        this.color = color || currentColor;
       }
-    }
-    drawBubbles();
-    requestAnimationFrame(updateBubbles);
-  }
-  function drawBubbles() {
-    if (currentMode !== 'bubbles') return;
-    ctx.clearRect(0, 0, width, height);
-    for (let b of bubbles) {
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.radius * b.life, 0, Math.PI*2);
-      ctx.fillStyle = b.color + Math.floor(b.life * 80).toString(16).padStart(2,'0');
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(b.x-2, b.y-2, b.radius * 0.3 * b.life, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255,255,245,0.8)";
-      ctx.fill();
-    }
-  }
-  function popBubble(x, y) {
-    // find nearest bubble
-    let closest = null;
-    let minDist = 25;
-    for (let b of bubbles) {
-      let dx = b.x - x, dy = b.y - y;
-      let dist = Math.hypot(dx, dy);
-      if (dist < minDist) { minDist = dist; closest = b; }
-    }
-    if (closest) {
-      bubbles = bubbles.filter(b => b !== closest);
-      if (soundEnabled) playPopSound();
-      // add small particles
-      for (let i = 0; i < 6; i++) {
-        addBubble(closest.x, closest.y);
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        // wrap around edges gently
+        if (this.x < -20) this.x = width + 20;
+        if (this.x > width + 20) this.x = -20;
+        if (this.y < -20) this.y = height + 20;
+        if (this.y > height + 20) this.y = -20;
       }
-    } else {
-      addBubble(x, y);
-      if (soundEnabled) playPopSound();
-    }
-  }
-
-  // ========== RIPPLES MODE ==========
-  let ripples = [];
-  function addRipple(x, y) {
-    ripples.push({ x, y, radius: 5, life: 1, color: currentColour });
-  }
-  function updateRipples() {
-    for (let i = ripples.length-1; i >= 0; i--) {
-      let r = ripples[i];
-      r.radius += 3.5;
-      r.life -= 0.02;
-      if (r.life <= 0) ripples.splice(i,1);
-    }
-    drawRipples();
-    requestAnimationFrame(updateRipples);
-  }
-  function drawRipples() {
-    if (currentMode !== 'ripples') return;
-    ctx.clearRect(0, 0, width, height);
-    for (let r of ripples) {
-      ctx.beginPath();
-      ctx.arc(r.x, r.y, r.radius, 0, Math.PI*2);
-      ctx.strokeStyle = r.color;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(r.x, r.y, r.radius-2, 0, Math.PI*2);
-      ctx.strokeStyle = "rgba(255,255,245,0.6)";
-      ctx.stroke();
-    }
-  }
-
-  // ========== SPINNERS MODE (drag/trace) ==========
-  let spinners = [];
-  let lastPos = null;
-  function addSpinner(x, y) {
-    spinners.push({
-      x, y,
-      rotation: 0,
-      size: 28,
-      life: 1,
-      speed: 0.08 + Math.random() * 0.1,
-      color: currentColour
-    });
-    if (spinners.length > 30) spinners.shift();
-  }
-  function updateSpinners() {
-    for (let i = spinners.length-1; i >= 0; i--) {
-      let s = spinners[i];
-      s.rotation += s.speed;
-      s.life -= 0.01;
-      if (s.life <= 0) spinners.splice(i,1);
-    }
-    drawSpinners();
-    requestAnimationFrame(updateSpinners);
-  }
-  function drawSpinners() {
-    if (currentMode !== 'spinners') return;
-    ctx.clearRect(0, 0, width, height);
-    for (let s of spinners) {
-      ctx.save();
-      ctx.translate(s.x, s.y);
-      ctx.rotate(s.rotation);
-      for (let i = 0; i < 5; i++) {
-        const angle = (i / 5) * Math.PI * 2;
-        const x1 = Math.cos(angle) * s.size * 0.7;
-        const y1 = Math.sin(angle) * s.size * 0.7;
-        const x2 = Math.cos(angle + 0.5) * s.size * 0.3;
-        const y2 = Math.sin(angle + 0.5) * s.size * 0.3;
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.life * 0.8;
         ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.fillStyle = s.color;
+        ctx.arc(this.x, this.y, this.size * (0.4 + this.life * 0.6), 0, Math.PI*2);
+        ctx.fillStyle = this.color;
         ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x-2, this.y-2, this.size * 0.3, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(255,245,200,0.6)";
+        ctx.fill();
+        ctx.restore();
       }
-      ctx.restore();
     }
-  }
 
-  // ---- Event handlers ----
-  function handleTap(e) {
-    const { x, y } = getCanvasCoords(e);
-    if (currentMode === 'bubbles') popBubble(x, y);
-    else if (currentMode === 'ripples') {
-      addRipple(x, y);
-      if (soundEnabled) playSoftTone();
+    function addParticle(x, y, color) {
+      particles.push(new Particle(x, y, (Math.random()-0.5)*1.2, (Math.random()-0.5)*1.2 - 0.5, color));
+      // limit total particles to keep performance smooth
+      if (particles.length > 400) particles.shift();
     }
-  }
 
-  function handleDrag(e) {
-    if (currentMode !== 'spinners') return;
-    const { x, y } = getCanvasCoords(e);
-    addSpinner(x, y);
-    if (soundEnabled && Math.random() < 0.1) playSoftTone(); // occasional sound
-  }
+    // create initial gentle swarm
+    for (let i = 0; i < 80; i++) {
+      particles.push(new Particle(Math.random() * width, Math.random() * height));
+    }
 
-  canvas.addEventListener('click', handleTap);
-  canvas.addEventListener('touchstart', handleTap);
-  canvas.addEventListener('mousemove', handleDrag);
-  canvas.addEventListener('touchmove', handleDrag);
+    let lastX = null, lastY = null;
+    function handleMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      let clientX, clientY;
+      if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+        e.preventDefault();
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      let canvasX = (clientX - rect.left) * scaleX;
+      let canvasY = (clientY - rect.top) * scaleY;
+      canvasX = Math.min(Math.max(0, canvasX), width);
+      canvasY = Math.min(Math.max(0, canvasY), height);
+      if (lastX !== null) {
+        // add particles along the line
+        const dist = Math.hypot(canvasX - lastX, canvasY - lastY);
+        const steps = Math.min(15, Math.floor(dist / 5) + 1);
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const x = lastX + (canvasX - lastX) * t;
+          const y = lastY + (canvasY - lastY) * t;
+          addParticle(x, y, currentColor);
+          if (soundEnabled && Math.random() < 0.08) playSoftTone();
+        }
+      } else {
+        addParticle(canvasX, canvasY, currentColor);
+      }
+      lastX = canvasX;
+      lastY = canvasY;
+    }
+    function handleEnd() {
+      lastX = null;
+      lastY = null;
+    }
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
+    canvas.addEventListener('mousedown', handleMove);
+    canvas.addEventListener('touchstart', handleMove);
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchend', handleEnd);
+    canvas.addEventListener('mouseleave', handleEnd);
 
-  // ---- Mode switching ----
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentMode = btn.dataset.mode;
-      // clear only visuals for the current mode? we can clear arrays
-      if (currentMode === 'bubbles') bubbles = [];
-      else if (currentMode === 'ripples') ripples = [];
-      else if (currentMode === 'spinners') spinners = [];
-      // redraw empty
+    // reset all particles
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      particles = [];
+      for (let i = 0; i < 60; i++) {
+        particles.push(new Particle(Math.random() * width, Math.random() * height));
+      }
+    });
+
+    // sound
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function playSoftTone() {
+      if (!soundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 700 + Math.random() * 300;
+      gain.gain.value = 0.03;
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+      osc.stop(audioCtx.currentTime + 0.2);
+    }
+    const soundBtn = document.getElementById('soundBtn');
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundBtn.innerText = soundEnabled ? "🔊 sound on" : "🔇 sound off";
+      if (soundEnabled && !audioCtx) initAudio();
+    });
+
+    // animation loop
+    function animate() {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
-    });
-  });
-
-  // ---- Colour palette ----
-  const colours = [
-    "#8BAF7A", "#E8798A", "#F4A15D", "#C9E4DE", "#DDEAD4", "#FDE4CF", "#E0D3F5", "#B0C4DE"
-  ];
-  const paletteDiv = document.getElementById('colorPalette');
-  colours.forEach(col => {
-    const swatch = document.createElement('div');
-    swatch.className = 'color-swatch';
-    swatch.style.backgroundColor = col;
-    swatch.addEventListener('click', () => {
-      currentColour = col;
-      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-      swatch.classList.add('active');
-      // update existing bubbles/ripples/spinners? optional: change colour of future ones only
-    });
-    paletteDiv.appendChild(swatch);
-  });
-  // set active default
-  document.querySelector('.color-swatch').classList.add('active');
-
-  // ---- Clear button ----
-  document.getElementById('clearCanvas').addEventListener('click', () => {
-    if (currentMode === 'bubbles') bubbles = [];
-    else if (currentMode === 'ripples') ripples = [];
-    else if (currentMode === 'spinners') spinners = [];
-    ctx.clearRect(0, 0, width, height);
-  });
-
-  // ---- Sound ----
-  let audioCtx = null;
-  function initAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  function playPopSound() {
-    if (!soundEnabled) return;
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.frequency.value = 800;
-    gain.gain.value = 0.08;
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
-    osc.stop(audioCtx.currentTime + 0.25);
-  }
-  function playSoftTone() {
-    if (!soundEnabled) return;
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.frequency.value = 440;
-    gain.gain.value = 0.04;
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-    osc.stop(audioCtx.currentTime + 0.3);
-  }
-  const soundToggle = document.getElementById('soundToggle');
-  soundToggle.addEventListener('click', () => {
-    soundEnabled = !soundEnabled;
-    soundToggle.innerText = soundEnabled ? "🔊 sound on" : "🔇 sound off";
-    if (soundEnabled && !audioCtx) initAudio();
-  });
-
-  // Start animation loops
-  updateBubbles();
-  updateRipples();
-  updateSpinners();
+      for (let i = particles.length-1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].life <= 0) {
+          particles.splice(i,1);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
 </script>
 </body>
 </html>
