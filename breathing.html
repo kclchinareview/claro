@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aurio · breathing bubble</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .back-home {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-home:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .breathing-card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      max-width: 550px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    .slogan {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      color: #7B9A6B;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .bubble-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+
+    .bubble {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at 35% 35%, rgba(200, 230, 180, 0.9), rgba(140, 180, 120, 0.7));
+      border-radius: 50%;
+      transition: all 0.05s linear;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1), inset 0 -5px 10px rgba(0,0,0,0.05);
+      will-change: transform;
+    }
+
+    .instruction {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin: 1rem 0;
+      transition: color 0.2s;
+    }
+
+    .status {
+      font-size: 0.9rem;
+      color: #8DAF7A;
+      margin-bottom: 1rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .btn {
+      background: #EFF6EB;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 60px;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #5F7C53;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #8BAF7A;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #E2EFD8;
+    }
+
+    .counter {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #6C8760;
+    }
+    .counter-number {
+      font-weight: 600;
+      color: #5F7C53;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← back to tools</a>
+
+<div class="breathing-card">
+  <div class="slogan">🧘 breathing bubble · find your calm</div>
+  <div class="bubble-container">
+    <div class="bubble" id="bubble"></div>
+  </div>
+  <div class="instruction" id="instruction">inhale</div>
+  <div class="status" id="status">ready</div>
+  <div class="button-group">
+    <button class="btn btn-primary" id="startBtn">start</button>
+    <button class="btn" id="pauseBtn">pause</button>
+    <button class="btn" id="resetBtn">reset</button>
+  </div>
+  <div class="counter">
+    sessions completed: <span class="counter-number" id="sessionCount">0</span>
+  </div>
+  <div class="footer-note">inhale 4s · exhale 4s · repeat 5 times</div>
+</div>
+
+<script>
+  // Breathing parameters
+  const INHALE_TIME = 4000;   // 4 seconds
+  const EXHALE_TIME = 4000;   // 4 seconds
+  const CYCLES = 5;            // 5 breath cycles per session
+
+  let currentCycle = 0;
+  let isActive = false;
+  let timer = null;
+  let phase = 'inhale'; // 'inhale' or 'exhale'
+  let startTime = 0;
+  let remainingInPhase = 0;
+  let sessionsCompleted = 0;
+
+  // DOM elements
+  const bubble = document.getElementById('bubble');
+  const instructionEl = document.getElementById('instruction');
+  const statusEl = document.getElementById('status');
+  const startBtn = document.getElementById('startBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const sessionSpan = document.getElementById('sessionCount');
+
+  // Load sessions from localStorage
+  if (localStorage.getItem('breathingSessions')) {
+    sessionsCompleted = parseInt(localStorage.getItem('breathingSessions')) || 0;
+    sessionSpan.innerText = sessionsCompleted;
+  }
+
+  function saveSessions() {
+    localStorage.setItem('breathingSessions', sessionsCompleted);
+    sessionSpan.innerText = sessionsCompleted;
+  }
+
+  // Update bubble size based on phase and progress (0..1)
+  function updateBubbleSize(progress) {
+    // progress: 0 = start, 1 = end of current phase
+    let scale;
+    if (phase === 'inhale') {
+      // grow from 0.5 to 1.2
+      scale = 0.5 + (progress * 0.7);
+    } else {
+      // shrink from 1.2 to 0.5
+      scale = 1.2 - (progress * 0.7);
+    }
+    bubble.style.transform = `scale(${scale})`;
+  }
+
+  function updateInstruction(text) {
+    instructionEl.textContent = text;
+  }
+
+  function updateStatus(text) {
+    statusEl.textContent = text;
+  }
+
+  function stopTimer() {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  }
+
+  function resetUI() {
+    stopTimer();
+    isActive = false;
+    phase = 'inhale';
+    currentCycle = 0;
+    updateInstruction('inhale');
+    updateStatus('ready');
+    bubble.style.transform = 'scale(0.5)';
+    // clear any pending timeout
+  }
+
+  function completeSession() {
+    sessionsCompleted++;
+    saveSessions();
+    updateStatus(`session complete! +1`);
+    // soft visual feedback
+    bubble.style.transform = 'scale(0.6)';
+    setTimeout(() => {
+      if (!isActive) bubble.style.transform = 'scale(0.5)';
+    }, 500);
+  }
+
+  function startPhase() {
+    if (!isActive) return;
+    const duration = (phase === 'inhale') ? INHALE_TIME : EXHALE_TIME;
+    const start = Date.now();
+
+    function step() {
+      const elapsed = Date.now() - start;
+      let progress = Math.min(1, elapsed / duration);
+      updateBubbleSize(progress);
+      if (progress < 1) {
+        timer = setTimeout(step, 16); // ~60fps
+      } else {
+        // phase finished
+        if (phase === 'inhale') {
+          // switch to exhale
+          phase = 'exhale';
+          updateInstruction('exhale');
+          startPhase();
+        } else {
+          // exhale finished -> increment cycle
+          currentCycle++;
+          if (currentCycle >= CYCLES) {
+            // session complete
+            isActive = false;
+            completeSession();
+            resetUI();
+            updateStatus('done — tap start again');
+            return;
+          } else {
+            // start next inhale
+            phase = 'inhale';
+            updateInstruction('inhale');
+            startPhase();
+          }
+        }
+      }
+    }
+    step();
+  }
+
+  function startBreathing() {
+    if (isActive) return;
+    // reset if not already in a session or if last session finished
+    if (currentCycle >= CYCLES || currentCycle === 0) {
+      currentCycle = 0;
+      phase = 'inhale';
+      updateInstruction('inhale');
+      bubble.style.transform = 'scale(0.5)';
+    }
+    isActive = true;
+    updateStatus('breathing...');
+    startPhase();
+  }
+
+  function pauseBreathing() {
+    if (!isActive) return;
+    isActive = false;
+    stopTimer();
+    updateStatus('paused');
+  }
+
+  function resetBreathing() {
+    pauseBreathing();
+    currentCycle = 0;
+    phase = 'inhale';
+    updateInstruction('inhale');
+    updateStatus('ready');
+    bubble.style.transform = 'scale(0.5)';
+  }
+
+  startBtn.addEventListener('click', startBreathing);
+  pauseBtn.addEventListener('click', pauseBreathing);
+  resetBtn.addEventListener('click', resetBreathing);
+
+  // initial bubble size
+  bubble.style.transform = 'scale(0.5)';
+</script>
+</body>
+</html>
