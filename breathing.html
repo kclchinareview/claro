@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>aurio · breathing bubble</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
   <style>
@@ -21,6 +21,7 @@
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
+      transition: background 0.3s ease;
     }
 
     .back-home {
@@ -34,8 +35,9 @@
       font-size: 0.85rem;
       font-weight: 500;
       color: #5F7C53;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       transition: 0.2s;
+      z-index: 2;
     }
     .back-home:hover {
       transform: translateY(-2px);
@@ -52,6 +54,8 @@
       text-align: center;
       box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
       border: 1px solid rgba(255, 255, 245, 0.6);
+      transition: background 0.3s, border 0.3s;
+      z-index: 2;
     }
 
     .slogan {
@@ -61,6 +65,7 @@
       color: #7B9A6B;
       font-weight: 500;
       margin-bottom: 1rem;
+      transition: color 0.3s;
     }
 
     .bubble-container {
@@ -83,15 +88,14 @@
     .instruction {
       font-size: 1.2rem;
       font-weight: 500;
-      color: #4A6741;
       margin: 1rem 0;
-      transition: color 0.2s;
+      transition: color 0.3s;
     }
 
     .status {
       font-size: 0.9rem;
-      color: #8DAF7A;
       margin-bottom: 1rem;
+      transition: color 0.3s;
     }
 
     .button-group {
@@ -133,17 +137,51 @@
     .counter {
       margin-top: 1rem;
       font-size: 0.8rem;
-      color: #6C8760;
+      transition: color 0.3s;
     }
     .counter-number {
       font-weight: 600;
-      color: #5F7C53;
     }
 
     .footer-note {
       margin-top: 1.5rem;
       font-size: 0.7rem;
-      color: #8DAF7A;
+      transition: color 0.3s;
+    }
+
+    .theme-picker {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: rgba(255,255,245,0.8);
+      backdrop-filter: blur(8px);
+      padding: 0.6rem 1rem;
+      border-radius: 60px;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 10;
+      border: 1px solid #ddd8c5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .color-chip {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .color-chip:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 550px) {
+      .bubble { width: 120px; height: 120px; }
+      .breathing-card { padding: 1.5rem; }
+      .theme-picker { bottom: 0.5rem; right: 0.5rem; gap: 0.4rem; padding: 0.4rem 0.8rem; }
+      .color-chip { width: 26px; height: 26px; }
+      .instruction { font-size: 1rem; }
     }
   </style>
 </head>
@@ -151,8 +189,8 @@
 
 <a href="index.html" class="back-home">← back to tools</a>
 
-<div class="breathing-card">
-  <div class="slogan">🧘 breathing bubble · find your calm</div>
+<div class="breathing-card" id="breathingCard">
+  <div class="slogan" id="slogan">🧘 breathing bubble · find your calm</div>
   <div class="bubble-container">
     <div class="bubble" id="bubble"></div>
   </div>
@@ -163,27 +201,35 @@
     <button class="btn" id="pauseBtn">pause</button>
     <button class="btn" id="resetBtn">reset</button>
   </div>
-  <div class="counter">
+  <div class="counter" id="counterText">
     sessions completed: <span class="counter-number" id="sessionCount">0</span>
   </div>
-  <div class="footer-note">inhale 4s · exhale 4s · repeat 5 times</div>
+  <div class="footer-note" id="footerNote">inhale 4s · exhale 4s · repeat 5 times</div>
+</div>
+
+<div class="theme-picker">
+  <div class="color-chip" style="background: #DDEAD4;" data-theme="sage" title="sage"></div>
+  <div class="color-chip" style="background: #FDE4CF;" data-theme="peach" title="peach"></div>
+  <div class="color-chip" style="background: #E0D3F5;" data-theme="lavender" title="lavender"></div>
+  <div class="color-chip" style="background: #C9E4DE;" data-theme="mint" title="mint"></div>
+  <div class="color-chip" style="background: #C9E4C5;" data-theme="dew" title="dew"></div>
+  <div class="color-chip" style="background: #B0C4DE;" data-theme="ocean" title="ocean (stars)"></div>
+  <div class="color-chip" style="background: #C8B99A;" data-theme="windhorse" title="wind horse"></div>
 </div>
 
 <script>
-  // Breathing parameters
-  const INHALE_TIME = 4000;   // 4 seconds
-  const EXHALE_TIME = 4000;   // 4 seconds
-  const CYCLES = 5;            // 5 breath cycles per session
+  // ---------- TIMER LOGIC ----------
+  const INHALE_TIME = 4000;
+  const EXHALE_TIME = 4000;
+  const CYCLES = 5;
 
   let currentCycle = 0;
   let isActive = false;
   let timer = null;
-  let phase = 'inhale'; // 'inhale' or 'exhale'
-  let startTime = 0;
-  let remainingInPhase = 0;
+  let phase = 'inhale';
   let sessionsCompleted = 0;
+  let animationFrame = null;
 
-  // DOM elements
   const bubble = document.getElementById('bubble');
   const instructionEl = document.getElementById('instruction');
   const statusEl = document.getElementById('status');
@@ -203,89 +249,56 @@
     sessionSpan.innerText = sessionsCompleted;
   }
 
-  // Update bubble size based on phase and progress (0..1)
   function updateBubbleSize(progress) {
-    // progress: 0 = start, 1 = end of current phase
     let scale;
     if (phase === 'inhale') {
-      // grow from 0.5 to 1.2
       scale = 0.5 + (progress * 0.7);
     } else {
-      // shrink from 1.2 to 0.5
       scale = 1.2 - (progress * 0.7);
     }
     bubble.style.transform = `scale(${scale})`;
   }
 
-  function updateInstruction(text) {
-    instructionEl.textContent = text;
-  }
-
-  function updateStatus(text) {
-    statusEl.textContent = text;
-  }
-
-  function stopTimer() {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
-  }
-
-  function resetUI() {
-    stopTimer();
-    isActive = false;
-    phase = 'inhale';
-    currentCycle = 0;
-    updateInstruction('inhale');
-    updateStatus('ready');
-    bubble.style.transform = 'scale(0.5)';
-    // clear any pending timeout
-  }
-
-  function completeSession() {
-    sessionsCompleted++;
-    saveSessions();
-    updateStatus(`session complete! +1`);
-    // soft visual feedback
-    bubble.style.transform = 'scale(0.6)';
-    setTimeout(() => {
-      if (!isActive) bubble.style.transform = 'scale(0.5)';
-    }, 500);
+  function stopAnimation() {
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    if (timer) clearTimeout(timer);
+    timer = null;
+    animationFrame = null;
   }
 
   function startPhase() {
     if (!isActive) return;
     const duration = (phase === 'inhale') ? INHALE_TIME : EXHALE_TIME;
     const start = Date.now();
+    let lastTimestamp = start;
 
     function step() {
-      const elapsed = Date.now() - start;
-      let progress = Math.min(1, elapsed / duration);
-      updateBubbleSize(progress);
-      if (progress < 1) {
-        timer = setTimeout(step, 16); // ~60fps
+      if (!isActive) return;
+      const now = Date.now();
+      const elapsed = Math.min(1, (now - start) / duration);
+      updateBubbleSize(elapsed);
+      if (elapsed < 1) {
+        animationFrame = requestAnimationFrame(step);
       } else {
         // phase finished
         if (phase === 'inhale') {
-          // switch to exhale
           phase = 'exhale';
-          updateInstruction('exhale');
+          instructionEl.textContent = 'exhale';
           startPhase();
         } else {
-          // exhale finished -> increment cycle
           currentCycle++;
           if (currentCycle >= CYCLES) {
-            // session complete
             isActive = false;
-            completeSession();
-            resetUI();
-            updateStatus('done — tap start again');
+            sessionsCompleted++;
+            saveSessions();
+            statusEl.textContent = 'done — tap start again';
+            instructionEl.textContent = 'inhale';
+            bubble.style.transform = 'scale(0.5)';
+            stopAnimation();
             return;
           } else {
-            // start next inhale
             phase = 'inhale';
-            updateInstruction('inhale');
+            instructionEl.textContent = 'inhale';
             startPhase();
           }
         }
@@ -296,40 +309,169 @@
 
   function startBreathing() {
     if (isActive) return;
-    // reset if not already in a session or if last session finished
-    if (currentCycle >= CYCLES || currentCycle === 0) {
+    if (currentCycle >= CYCLES) {
       currentCycle = 0;
       phase = 'inhale';
-      updateInstruction('inhale');
+      instructionEl.textContent = 'inhale';
       bubble.style.transform = 'scale(0.5)';
     }
     isActive = true;
-    updateStatus('breathing...');
+    statusEl.textContent = 'breathing...';
     startPhase();
   }
 
   function pauseBreathing() {
     if (!isActive) return;
     isActive = false;
-    stopTimer();
-    updateStatus('paused');
+    stopAnimation();
+    statusEl.textContent = 'paused';
   }
 
   function resetBreathing() {
     pauseBreathing();
     currentCycle = 0;
     phase = 'inhale';
-    updateInstruction('inhale');
-    updateStatus('ready');
+    instructionEl.textContent = 'inhale';
+    statusEl.textContent = 'ready';
     bubble.style.transform = 'scale(0.5)';
   }
 
   startBtn.addEventListener('click', startBreathing);
   pauseBtn.addEventListener('click', pauseBreathing);
   resetBtn.addEventListener('click', resetBreathing);
-
-  // initial bubble size
   bubble.style.transform = 'scale(0.5)';
+
+  // ---------- THEMES (same as pomodoro) ----------
+  const themes = {
+    sage: {
+      bodyBg: "linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%)",
+      cardBg: "rgba(254, 252, 245, 0.92)",
+      sloganColor: "#7B9A6B",
+      primaryBtn: "#8BAF7A",
+      primaryHover: "#7A9E68",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(200, 230, 180, 0.9), rgba(140, 180, 120, 0.7))",
+      accent: "#5F7C53",
+      instructionColor: "#4A6741",
+      statusColor: "#8DAF7A",
+      counterColor: "#6C8760"
+    },
+    peach: {
+      bodyBg: "linear-gradient(145deg, #FDE4CF 0%, #FCC8B0 100%)",
+      cardBg: "rgba(255, 250, 240, 0.94)",
+      sloganColor: "#C97E5A",
+      primaryBtn: "#E7A57A",
+      primaryHover: "#D48F64",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(245, 200, 170, 0.9), rgba(220, 160, 120, 0.7))",
+      accent: "#A5643A",
+      instructionColor: "#8B5A3A",
+      statusColor: "#C97E5A",
+      counterColor: "#A5643A"
+    },
+    lavender: {
+      bodyBg: "linear-gradient(145deg, #E0D3F5 0%, #CBB9E8 100%)",
+      cardBg: "rgba(253, 250, 255, 0.94)",
+      sloganColor: "#7A6A9C",
+      primaryBtn: "#9A89C2",
+      primaryHover: "#8775AE",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(210, 190, 230, 0.9), rgba(170, 140, 200, 0.7))",
+      accent: "#5E4A78",
+      instructionColor: "#5E4A78",
+      statusColor: "#7A6A9C",
+      counterColor: "#5E4A78"
+    },
+    mint: {
+      bodyBg: "linear-gradient(145deg, #C9E4DE 0%, #A8CFC5 100%)",
+      cardBg: "rgba(245, 255, 250, 0.92)",
+      sloganColor: "#4E8D7C",
+      primaryBtn: "#6DAF9B",
+      primaryHover: "#599885",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(180, 220, 200, 0.9), rgba(120, 170, 150, 0.7))",
+      accent: "#3D6D5E",
+      instructionColor: "#3D6D5E",
+      statusColor: "#4E8D7C",
+      counterColor: "#3D6D5E"
+    },
+    dew: {
+      bodyBg: "linear-gradient(135deg, #C9E4C5, #B5D3A8)",
+      cardBg: "rgba(250, 255, 245, 0.94)",
+      sloganColor: "#5F8B5C",
+      primaryBtn: "#7CAF6B",
+      primaryHover: "#6A995A",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(190, 220, 170, 0.9), rgba(130, 170, 110, 0.7))",
+      accent: "#44663E",
+      instructionColor: "#44663E",
+      statusColor: "#5F8B5C",
+      counterColor: "#44663E"
+    },
+    ocean: {
+      bodyBg: "linear-gradient(145deg, #B0C4DE 0%, #8CB0D0 100%)",
+      cardBg: "rgba(245, 250, 255, 0.94)",
+      sloganColor: "#3A6B8C",
+      primaryBtn: "#5A8FBB",
+      primaryHover: "#4A7BA3",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(160, 200, 220, 0.9), rgba(100, 150, 180, 0.7))",
+      accent: "#2C5778",
+      instructionColor: "#2C5778",
+      statusColor: "#3A6B8C",
+      counterColor: "#2C5778"
+    },
+    windhorse: {
+      bodyBg: "linear-gradient(145deg, #E8DCC8 0%, #D0C0A0 100%)",
+      cardBg: "rgba(253, 250, 240, 0.94)",
+      sloganColor: "#9E5A3A",
+      primaryBtn: "#7A5C3A",
+      primaryHover: "#6B4A2E",
+      bubbleGradient: "radial-gradient(circle at 35% 35%, rgba(210, 180, 140, 0.9), rgba(160, 130, 90, 0.7))",
+      accent: "#5C3A1E",
+      instructionColor: "#5C3A1E",
+      statusColor: "#9E5A3A",
+      counterColor: "#5C3A1E"
+    }
+  };
+
+  let currentTheme = 'sage';
+
+  function applyTheme(themeName) {
+    const t = themes[themeName];
+    if (!t) return;
+    currentTheme = themeName;
+    document.body.style.background = t.bodyBg;
+    document.getElementById('breathingCard').style.background = t.cardBg;
+    document.getElementById('slogan').style.color = t.sloganColor;
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.style.background = t.primaryBtn;
+    });
+    bubble.style.background = t.bubbleGradient;
+    instructionEl.style.color = t.instructionColor;
+    statusEl.style.color = t.statusColor;
+    document.getElementById('counterText').style.color = t.counterColor;
+    document.querySelector('.counter-number').style.color = t.accent;
+    document.getElementById('footerNote').style.color = t.statusColor;
+    const backLink = document.querySelector('.back-home');
+    if (backLink) backLink.style.color = t.accent;
+    let style = document.getElementById('dynamic-theme');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'dynamic-theme';
+      document.head.appendChild(style);
+    }
+    style.textContent = `
+      .btn-primary:hover { background: ${t.primaryHover} !important; }
+      .back-home { border-color: ${t.accent}40; }
+    `;
+    localStorage.setItem('breathingTheme', themeName);
+  }
+
+  const savedTheme = localStorage.getItem('breathingTheme');
+  if (savedTheme && themes[savedTheme]) applyTheme(savedTheme);
+  else applyTheme('sage');
+
+  document.querySelectorAll('.color-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const theme = chip.getAttribute('data-theme');
+      if (themes[theme]) applyTheme(theme);
+    });
+  });
 </script>
 </body>
 </html>
