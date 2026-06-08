@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · random acts of kindness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .back-home {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-home:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .kindness-card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      max-width: 550px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    .slogan {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      color: #7B9A6B;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .heart-icon {
+      font-size: 3rem;
+      margin: 1rem 0;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+
+    .suggestion-box {
+      background: rgba(230, 245, 220, 0.6);
+      border-radius: 40px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .suggestion-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #4A6741;
+      line-height: 1.4;
+    }
+
+    .generate-btn {
+      background: #8BAF7A;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 0.5rem 0;
+    }
+    .generate-btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+    .counter {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #6C8760;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← back to tools</a>
+
+<div class="kindness-card">
+  <div class="slogan">🎁 gentle acts of kindness · no pressure, just you</div>
+  <div class="heart-icon">💖</div>
+  <div class="suggestion-box" id="suggestionBox">
+    <div class="suggestion-text" id="suggestionText">click the button for a kind idea</div>
+  </div>
+  <button class="generate-btn" id="generateBtn">give me a gentle act</button>
+  <div class="counter" id="counter">you've generated <span id="count">0</span> kind acts</div>
+  <div class="footer-note">kindness can be quiet, small, and still beautiful — do what feels right for you today</div>
+</div>
+
+<script>
+  // Neurodivergent‑friendly kind acts
+  const kindActs = [
+    "🌿 take 3 slow, deep breaths — that's kindness to your nervous system",
+    "📵 put your phone on silent for 10 minutes — a gift of quiet",
+    "🧸 hug a soft blanket, a plushie, or wrap your arms around yourself",
+    "📝 write down one thing you did well today — even if it's small",
+    "🍵 make a warm drink and hold the cup with both hands",
+    "🎧 listen to one favourite song without doing anything else",
+    "💬 send a pre‑written text like 'thinking of you, no reply needed'",
+    "🧩 give yourself permission to stop a task that feels too hard right now",
+    "🕯️ dim the lights or light a candle (real or virtual)",
+    "💧 drink a glass of water — your body will thank you",
+    "📖 read one page of a book you love (no pressure to finish)",
+    "🧹 tidy one small surface (like a desk corner) for 2 minutes",
+    "🌼 draw or doodle a tiny flower — it doesn't have to be perfect",
+    "🧸 name three things you can see that bring you comfort",
+    "🎶 play a familiar, calming soundtrack (video game or lofi)",
+    "👕 change into your softest clothes",
+    "🧘‍♀️ roll your shoulders slowly — release tension without getting up",
+    "🐈 watch a short video of an animal being silly (guilt‑free!)",
+    "✨ write 'you are allowed to rest' on a sticky note and put it somewhere visible",
+    "🧩 pick one small item from your to‑do list and cross it off — even 'brush teeth' counts",
+    "☁️ look out a window and notice one cloud, tree, or bird — no need to label it",
+    "🧦 put on cosy socks or slippers",
+    "🎨 close your eyes and listen to a 1‑minute ambient sound (rain, waves, fan)",
+    "📦 give yourself permission to say 'no' to one request today — without explanation"
+  ];
+
+  let count = 0;
+  const countSpan = document.getElementById('count');
+  const suggestionDiv = document.getElementById('suggestionText');
+  const generateBtn = document.getElementById('generateBtn');
+
+  // load count from localStorage
+  const savedCount = localStorage.getItem('kindnessCount');
+  if (savedCount && !isNaN(parseInt(savedCount))) {
+    count = parseInt(savedCount);
+    countSpan.innerText = count;
+  }
+
+  function getRandomAct() {
+    const randomIndex = Math.floor(Math.random() * kindActs.length);
+    return kindActs[randomIndex];
+  }
+
+  function updateKindness() {
+    const act = getRandomAct();
+    suggestionDiv.innerHTML = act;
+    // simple animation
+    const box = document.getElementById('suggestionBox');
+    box.style.transform = 'scale(0.98)';
+    setTimeout(() => { box.style.transform = ''; }, 150);
+    // increment counter
+    count++;
+    countSpan.innerText = count;
+    localStorage.setItem('kindnessCount', count);
+  }
+
+  generateBtn.addEventListener('click', updateKindness);
+</script>
+</body>
+</html>
