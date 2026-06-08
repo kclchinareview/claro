@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aurio · mood dice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .back-home {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-home:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .dice-card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    .slogan {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      color: #7B9A6B;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .dice-display {
+      font-size: 7rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.1));
+    }
+    .dice-display:active {
+      transform: scale(0.95);
+    }
+
+    .roll-btn {
+      background: #8BAF7A;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 1rem 0;
+    }
+    .roll-btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+
+    .result-message {
+      background: rgba(230, 245, 220, 0.7);
+      border-radius: 40px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #4A6741;
+      transition: all 0.2s;
+    }
+
+    .last-roll {
+      font-size: 0.8rem;
+      color: #8DAF7A;
+      margin-top: 1rem;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← back to tools</a>
+
+<div class="dice-card">
+  <div class="slogan">🎲 roll for a mood · gentle guidance</div>
+  <div class="dice-display" id="diceIcon">🎲</div>
+  <button class="roll-btn" id="rollBtn">roll the dice</button>
+  <div class="result-message" id="resultMessage">☁️ click to begin</div>
+  <div class="last-roll" id="lastRoll"></div>
+  <div class="footer-note">each roll brings a little intention — no pressure, just a nudge</div>
+</div>
+
+<script>
+  // mood / activity options (6 sides)
+  const moods = [
+    { emoji: "☁️", text: "rest · take a quiet break, no screens" },
+    { emoji: "📖", text: "read · a few pages of a book or a poem" },
+    { emoji: "🧸", text: "stretch · gentle movement, wiggle your fingers" },
+    { emoji: "🍵", text: "tea break · make a warm drink and breathe" },
+    { emoji: "🎧", text: "listen · one song, just for you" },
+    { emoji: "🌸", text: "journal · write one thing you're grateful for" }
+  ];
+
+  const diceDisplay = document.getElementById('diceIcon');
+  const rollBtn = document.getElementById('rollBtn');
+  const resultDiv = document.getElementById('resultMessage');
+  const lastRollSpan = document.getElementById('lastRoll');
+
+  // load last result from localStorage
+  const saved = localStorage.getItem('moodDice_last');
+  if (saved) {
+    try {
+      const last = JSON.parse(saved);
+      lastRollSpan.innerText = `last roll: ${last.emoji} ${last.text.substring(0, 40)}...`;
+    } catch(e) {}
+  }
+
+  function rollDice() {
+    // rolling animation: cycle through emojis quickly
+    let rolls = 0;
+    const maxRolls = 10;
+    const interval = setInterval(() => {
+      const randomIdx = Math.floor(Math.random() * moods.length);
+      diceDisplay.innerText = moods[randomIdx].emoji;
+      rolls++;
+      if (rolls >= maxRolls) {
+        clearInterval(interval);
+        // final result
+        const finalIdx = Math.floor(Math.random() * moods.length);
+        const mood = moods[finalIdx];
+        diceDisplay.innerText = mood.emoji;
+        resultDiv.innerHTML = `${mood.emoji} ${mood.text}`;
+        // save to localStorage
+        const lastData = { emoji: mood.emoji, text: mood.text, timestamp: new Date().toLocaleString() };
+        localStorage.setItem('moodDice_last', JSON.stringify(lastData));
+        lastRollSpan.innerText = `last roll: ${mood.emoji} ${mood.text.substring(0, 40)}...`;
+        // add a little bounce effect
+        resultDiv.style.transform = 'scale(1.02)';
+        setTimeout(() => { resultDiv.style.transform = ''; }, 200);
+      }
+    }, 70);
+  }
+
+  rollBtn.addEventListener('click', rollDice);
+  diceDisplay.addEventListener('click', rollDice);
+
+  // initial random (not needed, but nice)
+  const randomInit = Math.floor(Math.random() * moods.length);
+  diceDisplay.innerText = moods[randomInit].emoji;
+  resultDiv.innerHTML = `${moods[randomInit].emoji} ${moods[randomInit].text}`;
+</script>
+</body>
+</html>
