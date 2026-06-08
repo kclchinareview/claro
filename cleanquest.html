@@ -235,7 +235,6 @@
       pointer-events: none;
       z-index: 1;
     }
-
     @media (max-width: 550px) {
       .card { padding: 1.2rem; }
       .task-item { flex-direction: column; align-items: stretch; }
@@ -290,13 +289,13 @@
 </div>
 
 <script>
-  // ---- Star particle system (same as pomodoro) ----
+  // ---- STAR PARTICLE SYSTEM (from pomodoro) ----
   const canvas = document.getElementById('pixelCanvas');
   let ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   let animationId = null;
   let particles = [];
-  let currentPoints = 0;
+  let currentPointsForStars = 0;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -348,7 +347,6 @@
   function generateStars(points) {
     if (animationId) cancelAnimationFrame(animationId);
     particles = [];
-    // number of stars scales with points: max ~80 at 200+ points
     let starCount = Math.min(80, Math.floor(points / 3) + 5);
     starCount = Math.max(5, starCount);
     for (let i = 0; i < starCount; i++) {
@@ -381,10 +379,10 @@
 
   window.addEventListener('resize', () => {
     resizeCanvas();
-    generateStars(currentPoints);
+    generateStars(currentPointsForStars);
   });
 
-  // ---- Clean quest core logic ----
+  // ---- CLEAN QUEST CORE ----
   let totalPoints = 0;
   let activeTimer = null;
   let timerInterval = null;
@@ -434,14 +432,14 @@
   function loadPoints() {
     const saved = localStorage.getItem('cleanquest_points');
     if (saved) totalPoints = parseInt(saved) || 0;
-    currentPoints = totalPoints;
+    currentPointsForStars = totalPoints;
     updatePointsUI();
     generateStars(totalPoints);
   }
 
   function savePoints() {
     localStorage.setItem('cleanquest_points', totalPoints);
-    currentPoints = totalPoints;
+    currentPointsForStars = totalPoints;
     updatePointsUI();
     generateStars(totalPoints);
   }
@@ -521,7 +519,6 @@
         const points = parseInt(btn.dataset.points);
         totalPoints += points;
         savePoints();
-        // small animation
         btn.innerText = '✓ done!';
         setTimeout(() => { btn.innerText = '✔️ complete'; }, 1000);
       });
