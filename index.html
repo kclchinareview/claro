@@ -367,8 +367,9 @@
     </div>
     <div class="controls">
       <a href="about.html" class="about-link">📘 about & guide</a>
-      <div class="theme-picker-row" id="colorPickerRow"></div>
-      <div class="theme-picker-row" id="fontPickerRow"></div>
+      <div class="theme-picker-row" id="themeRow">
+        <!-- colour chips and font buttons will be injected here in one row -->
+      </div>
     </div>
   </div>
 
@@ -469,11 +470,9 @@
     { name: "windhorse", hex: "#E8DCC8" }
   ];
 
-  // Font options – Comic Sans now plain (no cursive fallback)
+  // Font options – only 4 items to fit in one row with colour chips
   const fontOptions = [
     { name: "Helvetica Neue", value: "'Helvetica Neue', Helvetica, Arial, sans-serif" },
-    { name: "Arial", value: "Arial, Helvetica, sans-serif" },
-    { name: "Calibri", value: "Calibri, 'Segoe UI', sans-serif" },
     { name: "Comic Sans", value: "'Comic Sans MS', sans-serif" },
     { name: "OpenDyslexic", value: "'OpenDyslexic', 'Comic Sans MS', sans-serif" },
     { name: "Times New Roman", value: "'Times New Roman', Times, serif" }
@@ -510,8 +509,10 @@
     });
   }
 
-  // Build colour picker row
-  const colorRow = document.getElementById('colorPickerRow');
+  // Build a single row containing both colour chips and font buttons
+  const themeRow = document.getElementById('themeRow');
+
+  // Add colour chips
   colorThemes.forEach(theme => {
     const chip = document.createElement('div');
     chip.className = 'color-chip';
@@ -519,18 +520,17 @@
     chip.dataset.theme = theme.name;
     chip.title = theme.name;
     chip.addEventListener('click', () => setColorTheme(theme.name));
-    colorRow.appendChild(chip);
+    themeRow.appendChild(chip);
   });
 
-  // Build font picker row
-  const fontRow = document.getElementById('fontPickerRow');
+  // Add font buttons
   fontOptions.forEach(font => {
     const btn = document.createElement('button');
     btn.className = 'font-btn';
     btn.textContent = font.name;
     btn.dataset.font = font.name;
     btn.addEventListener('click', () => setFont(font.value, font.name));
-    fontRow.appendChild(btn);
+    themeRow.appendChild(btn);
   });
 
   // Apply saved settings
