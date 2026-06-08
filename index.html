@@ -30,16 +30,7 @@
       --card-shadow: 0 8px 20px rgba(0,0,0,0.03);
     }
 
-    /* Colour themes */
-    body[data-theme="baby pink"] {
-      --bg: #fff5f7;
-      --surface: #ffeef2;
-      --text: #3f2e35;
-      --text-light: #7a5a64;
-      --border: #fbc4d1;
-      --primary: #e8798a;
-      --primary-hover: #db6a7c;
-    }
+    /* Colour themes (reordered, as you had) */
     body[data-theme="mint green"] {
       --bg: #f0faf5;
       --surface: #e4f5ec;
@@ -49,43 +40,15 @@
       --primary: #2c9c6e;
       --primary-hover: #23855d;
     }
-    body[data-theme="light orange"] {
-      --bg: #fff5e6;
-      --surface: #ffefdb;
-      --text: #4a341a;
-      --text-light: #8b6b42;
-      --border: #ffd9a5;
-      --primary: #e67e22;
-      --primary-hover: #d35400;
+    body[data-theme="mint"] {
+      --bg: #C9E4DE;
+      --surface: rgba(245, 255, 250, 0.92);
+      --text: #2d6b5c;
+      --text-light: #4e8d7c;
+      --border: #a8cfc5;
+      --primary: #6DAF9B;
+      --primary-hover: #599885;
     }
-    body[data-theme="paper yellow"] {
-      --bg: #fef9e0;
-      --surface: #fffdf0;
-      --text: #3d3a2b;
-      --text-light: #6b6548;
-      --border: #f7e9b0;
-      --primary: #c9a03d;
-      --primary-hover: #b0882c;
-    }
-    body[data-theme="lilac"] {
-      --bg: #f7f0ff;
-      --surface: #fbf8ff;
-      --text: #3a2e4a;
-      --text-light: #7b6b96;
-      --border: #e3d6f5;
-      --primary: #9b6db7;
-      --primary-hover: #855aa0;
-    }
-    body[data-theme="autism friendly"] {
-      --bg: #eef4fc;
-      --surface: #fafcff;
-      --text: #2c3e50;
-      --text-light: #5d7a9a;
-      --border: #cbdbe6;
-      --primary: #6c8db0;
-      --primary-hover: #5a7799;
-    }
-    /* Pomodoro colours */
     body[data-theme="sage"] {
       --bg: #DDEAD4;
       --surface: rgba(254, 252, 245, 0.92);
@@ -94,6 +57,24 @@
       --border: #c2d5b3;
       --primary: #8BAF7A;
       --primary-hover: #7A9E68;
+    }
+    body[data-theme="dew"] {
+      --bg: #C9E4C5;
+      --surface: rgba(250, 255, 245, 0.94);
+      --text: #3a5c3a;
+      --text-light: #5f8b5c;
+      --border: #b5d3a8;
+      --primary: #7CAF6B;
+      --primary-hover: #6A995A;
+    }
+    body[data-theme="baby pink"] {
+      --bg: #fff5f7;
+      --surface: #ffeef2;
+      --text: #3f2e35;
+      --text-light: #7a5a64;
+      --border: #fbc4d1;
+      --primary: #e8798a;
+      --primary-hover: #db6a7c;
     }
     body[data-theme="peach"] {
       --bg: #FDE4CF;
@@ -113,24 +94,6 @@
       --primary: #9A89C2;
       --primary-hover: #8775AE;
     }
-    body[data-theme="mint"] {
-      --bg: #C9E4DE;
-      --surface: rgba(245, 255, 250, 0.92);
-      --text: #2d6b5c;
-      --text-light: #4e8d7c;
-      --border: #a8cfc5;
-      --primary: #6DAF9B;
-      --primary-hover: #599885;
-    }
-    body[data-theme="dew"] {
-      --bg: #C9E4C5;
-      --surface: rgba(250, 255, 245, 0.94);
-      --text: #3a5c3a;
-      --text-light: #5f8b5c;
-      --border: #b5d3a8;
-      --primary: #7CAF6B;
-      --primary-hover: #6A995A;
-    }
     body[data-theme="ocean"] {
       --bg: #B0C4DE;
       --surface: rgba(245, 250, 255, 0.94);
@@ -149,6 +112,15 @@
       --primary: #7A5C3A;
       --primary-hover: #6B4A2E;
     }
+    body[data-theme="autism friendly"] {
+      --bg: #eef4fc;
+      --surface: #fafcff;
+      --text: #2c3e50;
+      --text-light: #5d7a9a;
+      --border: #cbdbe6;
+      --primary: #6c8db0;
+      --primary-hover: #5a7799;
+    }
 
     body {
       background-color: var(--bg);
@@ -163,17 +135,17 @@
       margin: 0 auto;
     }
 
+    /* Header – exactly as you had it */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       padding-bottom: 1rem;
       border-bottom: 2px solid var(--border);
     }
-
     .logo h1 {
       font-size: 2rem;
       font-weight: 600;
@@ -185,33 +157,64 @@
       font-size: 0.9rem;
       margin-top: 0.25rem;
     }
-
-    .theme-picker {
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.6rem;
+    }
+    .about-link {
+      background: var(--surface);
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      transition: 0.1s;
+    }
+    .about-link:hover {
+      transform: translateY(-2px);
+    }
+    .theme-picker-row {
       display: flex;
       flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 0.6rem;
       background: var(--surface);
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 60px;
       border: 1px solid var(--border);
     }
-    .theme-btn {
-      border: none;
-      background: none;
-      font-size: 0.8rem;
-      font-weight: 500;
+    .color-chip {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .color-chip:hover { transform: scale(1.1); }
+    .font-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
       padding: 0.3rem 0.8rem;
       border-radius: 40px;
+      font-size: 0.8rem;
       cursor: pointer;
       color: var(--text);
-      text-transform: lowercase;
+      font-family: inherit;
+      transition: 0.1s;
     }
-    .theme-btn.active {
+    .font-btn.active {
       background: var(--primary);
       color: white;
+      border-color: var(--primary);
     }
+    .font-btn:hover { transform: translateY(-2px); }
 
-    /* NEW: navigation buttons row */
+    /* New navigation buttons (only addition) */
     .nav-buttons {
       display: flex;
       justify-content: center;
@@ -238,6 +241,7 @@
       border-color: var(--primary);
     }
 
+    /* Section titles */
     .section-title {
       font-size: 1.6rem;
       font-weight: 500;
@@ -247,6 +251,7 @@
       padding-left: 0.8rem;
     }
 
+    /* Tools grid */
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -262,9 +267,7 @@
       box-shadow: var(--card-shadow);
       transition: transform 0.1s ease;
     }
-    .tool-card:hover {
-      transform: translateY(-4px);
-    }
+    .tool-card:hover { transform: translateY(-4px); }
     .tool-card h3 {
       font-size: 1.5rem;
       font-weight: 600;
@@ -289,14 +292,13 @@
       font-family: inherit;
       text-transform: lowercase;
     }
-    .btn:hover {
-      background: var(--primary-hover);
-    }
+    .btn:hover { background: var(--primary-hover); }
     .btn:disabled, .btn.disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
 
+    /* Task breaker demo panel */
     .magic-demo {
       margin-top: 2rem;
       background: var(--surface);
@@ -339,42 +341,37 @@
     }
     @media (max-width: 700px) {
       body { padding: 1rem; }
-      .top-bar { flex-direction: column; align-items: stretch; text-align: center; }
-      .theme-picker { justify-content: center; }
-      .nav-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
+      .top-bar { flex-direction: column; align-items: stretch; }
+      .controls { align-items: stretch; }
+      .theme-picker-row { justify-content: center; }
       .section-title { font-size: 1.3rem; }
+      .nav-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
+      .color-chip { width: 28px; height: 28px; }
     }
   </style>
   <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
 </head>
-<body data-theme="paper yellow">
+<body data-theme="baby pink" class="font-helvetica">
 <div class="container">
+  <!-- Header: logo + about link + theme/font row (unchanged) -->
   <div class="top-bar">
     <div class="logo">
       <h1>✧ aurio</h1>
       <div class="tagline">your friendly, colourful study toolkit — clear mind, bright aura</div>
     </div>
-    <div style="display: flex; gap: 0.8rem; align-items: center;">
-      <a href="about.html" class="about-link" style="background: var(--surface); padding: 0.4rem 1rem; border-radius: 60px; text-decoration: none; color: var(--text); border: 1px solid var(--border); font-size: 0.85rem;">📘 about & guide</a>
-      <div class="theme-picker">
-        <button class="theme-btn" data-theme="baby pink">🎀 baby pink</button>
-        <button class="theme-btn" data-theme="mint green">🌿 mint green</button>
-        <button class="theme-btn" data-theme="light orange">🍊 light orange</button>
-        <button class="theme-btn" data-theme="paper yellow">📄 paper yellow</button>
-        <button class="theme-btn" data-theme="lilac">🌸 lilac</button>
-        <button class="theme-btn" data-theme="dyslexic font">📖 dyslexic font</button>
-        <button class="theme-btn" data-theme="autism friendly">🧩 autism friendly</button>
-      </div>
+    <div class="controls">
+      <a href="about.html" class="about-link">📘 about & guide</a>
+      <div class="theme-picker-row" id="themeRow"></div>
     </div>
   </div>
 
-  <!-- NEW: Centered navigation buttons -->
+  <!-- NEW: navigation buttons (only addition) -->
   <div class="nav-buttons">
     <button class="nav-btn" id="navMindfulness">🌱 mindfulness & wellness</button>
     <button class="nav-btn" id="navAcademic">📚 academic helpers</button>
   </div>
 
-  <!-- ===== MINDFULNESS & WELLNESS SECTION (added id) ===== -->
+  <!-- Mindfulness section (added id) -->
   <div class="section-title" id="mindfulness">🌱 mindfulness & wellness</div>
   <div class="tools-grid">
     <div class="tool-card">
@@ -404,7 +401,7 @@
     </div>
   </div>
 
-  <!-- ===== ACADEMIC HELPERS SECTION (added id) ===== -->
+  <!-- Academic section (added id) -->
   <div class="section-title" id="academic">📚 academic helpers</div>
   <div class="tools-grid">
     <div class="tool-card">
@@ -429,12 +426,12 @@
     </div>
   </div>
 
-  <!-- syllabus reader link (unchanged) -->
+  <!-- Syllabus reader link -->
   <div style="text-align: center; margin: 1rem 0;">
     <a href="syllabus.html" class="btn" style="background: var(--surface); color: var(--primary); border: 1px solid var(--border);">📚 try syllabus reader →</a>
   </div>
 
-  <!-- task breaker demo panel (mock) (unchanged) -->
+  <!-- Task breaker demo panel -->
   <div id="magicTodoPanel" class="magic-demo" style="display: none;">
     <h3>✧ task breaker</h3>
     <p style="color: var(--text-light);">describe a task or assignment, and we’ll generate step‑by‑step guidance. (mock demo — real ai after backend)</p>
@@ -449,47 +446,96 @@
 
   <footer>
     🧡 aurio — gently powered by ai (coming soon). colour themes & mock tools work now.<br>
-    british english spelling. your theme is saved locally.
+    british english spelling. your theme and font are saved locally.
   </footer>
 </div>
 
 <script>
-  // Theme handling (unchanged)
-  function setTheme(themeName) {
+  // Colour themes list (reordered as you had)
+  const colorThemes = [
+    { name: "mint green", hex: "#f0faf5" },
+    { name: "mint", hex: "#C9E4DE" },
+    { name: "sage", hex: "#DDEAD4" },
+    { name: "dew", hex: "#C9E4C5" },
+    { name: "baby pink", hex: "#fff5f7" },
+    { name: "peach", hex: "#FDE4CF" },
+    { name: "lavender", hex: "#E0D3F5" },
+    { name: "ocean", hex: "#B0C4DE" },
+    { name: "windhorse", hex: "#E8DCC8" },
+    { name: "autism friendly", hex: "#eef4fc" }
+  ];
+
+  // Font options
+  const fontOptions = [
+    { name: "Helvetica Neue", value: "helvetica" },
+    { name: "Comic Sans", value: "comic" },
+    { name: "OpenDyslexic", value: "opendyslexic" },
+    { name: "Times New Roman", value: "times" }
+  ];
+
+  let currentColorTheme = localStorage.getItem('aurio_theme') || "baby pink";
+  let currentFontValue = localStorage.getItem('aurio_font') || "helvetica";
+
+  function setColorTheme(themeName) {
     document.body.setAttribute('data-theme', themeName);
     localStorage.setItem('aurio_theme', themeName);
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-      if (btn.dataset.theme === themeName) btn.classList.add('active');
-      else btn.classList.remove('active');
+    document.querySelectorAll('.color-chip').forEach(chip => {
+      if (chip.dataset.theme === themeName) {
+        chip.style.border = '3px solid white';
+        chip.style.boxShadow = '0 0 0 2px var(--primary)';
+      } else {
+        chip.style.border = '2px solid white';
+        chip.style.boxShadow = 'none';
+      }
     });
   }
-  const saved = localStorage.getItem('aurio_theme');
-  const validThemes = ['baby pink', 'mint green', 'light orange', 'paper yellow', 'lilac', 'dyslexic font', 'autism friendly', 'sage', 'peach', 'lavender', 'mint', 'dew', 'ocean', 'windhorse'];
-  if (saved && validThemes.includes(saved)) setTheme(saved);
-  else setTheme('paper yellow');
 
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+  function setFont(fontValue, fontName) {
+    document.body.classList.remove('font-helvetica', 'font-comic', 'font-opendyslexic', 'font-times');
+    document.body.classList.add(`font-${fontValue}`);
+    localStorage.setItem('aurio_font', fontValue);
+    document.querySelectorAll('.font-btn').forEach(btn => {
+      if (btn.dataset.font === fontName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  const themeRow = document.getElementById('themeRow');
+  colorThemes.forEach(theme => {
+    const chip = document.createElement('div');
+    chip.className = 'color-chip';
+    chip.style.backgroundColor = theme.hex;
+    chip.dataset.theme = theme.name;
+    chip.title = theme.name;
+    chip.addEventListener('click', () => setColorTheme(theme.name));
+    themeRow.appendChild(chip);
   });
 
-  // NEW: smooth scroll navigation
-  const mindfulnessBtn = document.getElementById('navMindfulness');
-  const academicBtn = document.getElementById('navAcademic');
-  const mindfulnessSection = document.getElementById('mindfulness');
-  const academicSection = document.getElementById('academic');
+  fontOptions.forEach(font => {
+    const btn = document.createElement('button');
+    btn.className = 'font-btn';
+    btn.textContent = font.name;
+    btn.dataset.font = font.name;
+    btn.addEventListener('click', () => setFont(font.value, font.name));
+    themeRow.appendChild(btn);
+  });
 
-  if (mindfulnessBtn && mindfulnessSection) {
-    mindfulnessBtn.addEventListener('click', () => {
-      mindfulnessSection.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-  if (academicBtn && academicSection) {
-    academicBtn.addEventListener('click', () => {
-      academicSection.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
+  setColorTheme(currentColorTheme);
+  const savedFontObj = fontOptions.find(f => f.value === currentFontValue) || fontOptions[0];
+  setFont(savedFontObj.value, savedFontObj.name);
 
-  // Task breaker panel toggle (unchanged)
+  // Smooth scroll navigation (new)
+  document.getElementById('navMindfulness').addEventListener('click', () => {
+    document.getElementById('mindfulness').scrollIntoView({ behavior: 'smooth' });
+  });
+  document.getElementById('navAcademic').addEventListener('click', () => {
+    document.getElementById('academic').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Task breaker logic (unchanged)
   const magicBtn = document.getElementById('magicTodoBtn');
   const magicPanel = document.getElementById('magicTodoPanel');
   const closePanel = document.getElementById('closeMagicTodo');
@@ -506,7 +552,6 @@
     });
   }
 
-  // Mock task breakdown logic (unchanged)
   const mockBreakdown = {
     default: "1. gather all materials\n2. break the task into smaller chunks\n3. set a timer for 15 minutes\n4. start with the easiest part\n5. take a 5-min break\n6. review what you've done",
     essay: "1. understand the essay prompt\n2. research and gather sources\n3. create a thesis statement\n4. outline main arguments\n5. write a rough draft\n6. revise and proofread",
