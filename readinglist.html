@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · reading list tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .add-section {
+      background: rgba(230, 245, 220, 0.3);
+      padding: 1rem;
+      border-radius: 40px;
+      margin-bottom: 2rem;
+    }
+    .add-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .add-row input, .add-row select {
+      font-family: inherit;
+      border-radius: 60px;
+      border: none;
+      padding: 0.7rem 1rem;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 245, 0.9);
+      border: 1px solid #C2D5B3;
+      flex: 1;
+      min-width: 140px;
+    }
+    .add-row input:focus, .add-row select:focus {
+      outline: none;
+      border-color: #8BAF7A;
+    }
+    .add-btn {
+      background: #8BAF7A;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 60px;
+      font-family: inherit;
+    }
+    .add-btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .filter-btn {
+      background: rgba(230, 245, 220, 0.5);
+      border: 1px solid #C2D5B3;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.1s;
+    }
+    .filter-btn.active {
+      background: #8BAF7A;
+      color: white;
+      border-color: #8BAF7A;
+    }
+    .stats {
+      font-size: 0.8rem;
+      color: #6C8760;
+    }
+
+    .reading-list {
+      list-style: none;
+      margin-top: 0.5rem;
+    }
+    .reading-item {
+      background: rgba(255, 255, 245, 0.7);
+      border-radius: 60px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      transition: 0.1s;
+      border-left: 6px solid;
+    }
+    .item-info {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .item-title {
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+    .item-title.read {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    .item-author {
+      font-size: 0.75rem;
+      color: #8DAF7A;
+    }
+    .priority-badge {
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+    }
+    .priority-high { background: #F4A15D20; color: #D97A2B; }
+    .priority-medium { background: #8BAF7A20; color: #5F7C53; }
+    .priority-low { background: #C2D5B320; color: #6C8760; }
+
+    .item-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .read-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #8BAF7A;
+    }
+    .edit-btn, .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      border-radius: 40px;
+      transition: 0.1s;
+    }
+    .edit-btn:hover, .delete-btn:hover {
+      background: rgba(0,0,0,0.1);
+      transform: scale(1.05);
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #8DAF7A;
+      padding: 2rem;
+      font-style: italic;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .card { padding: 1.5rem; }
+      .add-row { flex-direction: column; }
+      .reading-item { flex-direction: column; align-items: stretch; }
+      .item-actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>📚 reading list tracker</h1>
+    <div class="subhead">keep track of books, papers, articles — mark what you've read</div>
+
+    <div class="add-section">
+      <div class="add-row">
+        <input type="text" id="itemTitle" placeholder="Title *" autocomplete="off">
+        <input type="text" id="itemAuthor" placeholder="Author (optional)">
+        <select id="itemPriority">
+          <option value="high">🔴 high priority</option>
+          <option value="medium" selected>🟡 medium priority</option>
+          <option value="low">🟢 low priority</option>
+        </select>
+      </div>
+      <button class="add-btn" id="addBtn">+ add to reading list</button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">all</button>
+        <button class="filter-btn" data-filter="unread">unread</button>
+        <button class="filter-btn" data-filter="read">read</button>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <ul class="reading-list" id="readingList"></ul>
+  </div>
+  <footer>your reading list is saved in your browser — close anytime, it will be here when you return</footer>
+</div>
+
+<script>
+  let items = [];
+  let currentFilter = 'all';
+
+  function loadItems() {
+    const stored = localStorage.getItem('aurio_readinglist');
+    if (stored) {
+      try {
+        items = JSON.parse(stored);
+      } catch(e) { items = []; }
+    }
+    renderItems();
+  }
+
+  function saveItems() {
+    localStorage.setItem('aurio_readinglist', JSON.stringify(items));
+    updateStats();
+  }
+
+  function updateStats() {
+    const total = items.length;
+    const readCount = items.filter(i => i.read).length;
+    const unreadCount = total - readCount;
+    const statsEl = document.getElementById('stats');
+    if (statsEl) statsEl.innerText = `${unreadCount} unread · ${readCount} read · ${total} total`;
+  }
+
+  function getPriorityColor(priority) {
+    if (priority === 'high') return '#D97A2B';
+    if (priority === 'medium') return '#5F7C53';
+    return '#6C8760';
+  }
+
+  function getPriorityClass(priority) {
+    if (priority === 'high') return 'priority-high';
+    if (priority === 'medium') return 'priority-medium';
+    return 'priority-low';
+  }
+
+  function renderItems() {
+    const container = document.getElementById('readingList');
+    if (!container) return;
+
+    let filtered = items;
+    if (currentFilter === 'read') filtered = items.filter(i => i.read);
+    if (currentFilter === 'unread') filtered = items.filter(i => !i.read);
+
+    // Sort: unread first, then by priority (high > medium > low), then by title
+    const priorityOrder = { high: 1, medium: 2, low: 3 };
+    const sorted = [...filtered].sort((a, b) => {
+      if (a.read !== b.read) return a.read ? 1 : -1;
+      if (priorityOrder[a.priority] !== priorityOrder[b.priority]) return priorityOrder[a.priority] - priorityOrder[b.priority];
+      return a.title.localeCompare(b.title);
+    });
+
+    if (sorted.length === 0) {
+      container.innerHTML = '<div class="empty-message">📖 your reading list is empty — add a book or paper above ✨</div>';
+      updateStats();
+      return;
+    }
+
+    container.innerHTML = '';
+    sorted.forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'reading-item';
+      li.style.borderLeftColor = getPriorityColor(item.priority);
+      li.innerHTML = `
+        <div class="item-info">
+          <span class="item-title ${item.read ? 'read' : ''}">${escapeHtml(item.title)}</span>
+          ${item.author ? `<span class="item-author">by ${escapeHtml(item.author)}</span>` : ''}
+          <span class="priority-badge ${getPriorityClass(item.priority)}">${item.priority}</span>
+        </div>
+        <div class="item-actions">
+          <input type="checkbox" class="read-checkbox" data-id="${item.id}" ${item.read ? 'checked' : ''}>
+          <button class="edit-btn" data-id="${item.id}">✏️</button>
+          <button class="delete-btn" data-id="${item.id}">🗑️</button>
+        </div>
+      `;
+      container.appendChild(li);
+    });
+
+    // Attach event listeners
+    document.querySelectorAll('.read-checkbox').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const id = cb.getAttribute('data-id');
+        const item = items.find(i => i.id === id);
+        if (item) {
+          item.read = cb.checked;
+          saveItems();
+          renderItems();
+        }
+      });
+    });
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        const item = items.find(i => i.id === id);
+        if (item) {
+          const newTitle = prompt('Edit title:', item.title);
+          if (newTitle !== null && newTitle.trim() !== '') item.title = newTitle.trim();
+          const newAuthor = prompt('Edit author (or leave empty):', item.author || '');
+          item.author = newAuthor !== null ? newAuthor.trim() : item.author;
+          const newPriority = prompt('Set priority (high/medium/low):', item.priority);
+          if (newPriority && ['high','medium','low'].includes(newPriority.toLowerCase())) item.priority = newPriority.toLowerCase();
+          saveItems();
+          renderItems();
+        }
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        if (confirm('Remove this item from your reading list?')) {
+          items = items.filter(i => i.id !== id);
+          saveItems();
+          renderItems();
+        }
+      });
+    });
+
+    updateStats();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  function addItem() {
+    const titleInput = document.getElementById('itemTitle');
+    const authorInput = document.getElementById('itemAuthor');
+    const prioritySelect = document.getElementById('itemPriority');
+    const title = titleInput.value.trim();
+    if (!title) {
+      alert('Please enter a title.');
+      return;
+    }
+    const newItem = {
+      id: Date.now().toString(),
+      title: title,
+      author: authorInput.value.trim() || '',
+      priority: prioritySelect.value,
+      read: false
+    };
+    items.push(newItem);
+    saveItems();
+    renderItems();
+    titleInput.value = '';
+    authorInput.value = '';
+    prioritySelect.value = 'medium';
+  }
+
+  document.getElementById('addBtn').addEventListener('click', addItem);
+  document.getElementById('itemTitle').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addItem();
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.getAttribute('data-filter');
+      renderItems();
+    });
+  });
+
+  loadItems();
+</script>
+</body>
+</html>
