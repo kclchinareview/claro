@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>aurio · citation builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #DDEAD4 0%, #C2D5B3 100%);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(200, 190, 160, 0.5);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 245, 0.95);
+    }
+
+    .card {
+      background: rgba(254, 252, 245, 0.92);
+      backdrop-filter: blur(2px);
+      border-radius: 48px;
+      padding: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(50, 40, 20, 0.25);
+      border: 1px solid rgba(255, 255, 245, 0.6);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #4A6741;
+      margin-bottom: 0.25rem;
+    }
+    .subhead {
+      color: #7B9A6B;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #5F7C53;
+      margin-bottom: 0.25rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      font-family: inherit;
+      border-radius: 60px;
+      border: 1px solid #C2D5B3;
+      padding: 0.6rem 1rem;
+      background: rgba(255, 255, 245, 0.9);
+      font-size: 0.9rem;
+      transition: 0.1s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #8BAF7A;
+      box-shadow: 0 0 0 2px rgba(139, 175, 122, 0.3);
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn {
+      background: #8BAF7A;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background: #7A9E68;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(230, 245, 220, 0.7);
+      color: #5F7C53;
+      border: 1px solid #C2D5B3;
+    }
+    .btn-secondary:hover {
+      background: #C2D5B3;
+      transform: translateY(-2px);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .output-area {
+      background: rgba(240, 248, 235, 0.5);
+      border-radius: 32px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      display: none;
+    }
+    .output-area.show {
+      display: block;
+    }
+    .citation-text {
+      background: rgba(255, 255, 245, 0.8);
+      border-radius: 24px;
+      padding: 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      border-left: 4px solid #8BAF7A;
+      word-break: break-word;
+      color: #2C3E2B;
+    }
+    .copy-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 0.8rem;
+    }
+
+    .saved-section {
+      margin-top: 2rem;
+      border-top: 1px solid #E0EDD6;
+      padding-top: 1.5rem;
+    }
+    .saved-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .saved-header h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #5F7C53;
+    }
+    .saved-item {
+      background: rgba(255, 255, 245, 0.6);
+      border-radius: 28px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-left: 3px solid #C2D5B3;
+    }
+    .saved-item-text {
+      font-size: 0.85rem;
+      color: #2C3E2B;
+      flex: 1;
+    }
+    .saved-item-format {
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 60px;
+      background: #DDEAD4;
+      color: #4A6741;
+    }
+    .saved-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .small-btn {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      border-radius: 40px;
+      transition: 0.1s;
+    }
+    .small-btn:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-message {
+      color: #8DAF7A;
+      font-style: italic;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #8DAF7A;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.2rem; }
+      .row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← back to tools</a>
+  <div class="card">
+    <h1>📝 citation builder</h1>
+    <div class="subhead">choose a style, fill in the details, and get a formatted citation</div>
+
+    <!-- Citation Form -->
+    <div class="form-group">
+      <label for="citationFormat">citation style</label>
+      <select id="citationFormat">
+        <option value="mla">MLA (Modern Language Association)</option>
+        <option value="apa">APA (American Psychological Association)</option>
+        <option value="chicago">Chicago (Author-Date)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="author">author(s)</label>
+      <input type="text" id="author" placeholder="e.g., Smith, John or John Smith" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="title">title</label>
+      <input type="text" id="title" placeholder="e.g., The Art of Being" autocomplete="off">
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label for="year">year</label>
+        <input type="number" id="year" placeholder="e.g., 2023" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="publisher">publisher / journal</label>
+        <input type="text" id="publisher" placeholder="e.g., Penguin Books" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="url">url or doi <span style="font-weight:400; color:#8DAF7A;">(optional)</span></label>
+      <input type="url" id="url" placeholder="https://example.com" autocomplete="off">
+    </div>
+
+    <div class="action-row">
+      <button class="btn" id="generateBtn">✨ generate citation</button>
+      <button class="btn btn-secondary" id="clearFieldsBtn">🧹 clear fields</button>
+    </div>
+
+    <!-- Output area -->
+    <div class="output-area" id="outputArea">
+      <div class="citation-text" id="citationResult"></div>
+      <div class="copy-row">
+        <button class="btn btn-secondary" id="copyBtn">📋 copy to clipboard</button>
+        <button class="btn btn-secondary" id="saveBtn">💾 save citation</button>
+      </div>
+      <div id="copyFeedback" style="font-size:0.7rem; color:#8DAF7A; text-align:right; margin-top:0.3rem;"></div>
+    </div>
+
+    <!-- Saved citations -->
+    <div class="saved-section">
+      <div class="saved-header">
+        <h3>📂 saved citations</h3>
+        <button class="btn btn-secondary" id="clearSavedBtn" style="padding:0.3rem 1rem; font-size:0.8rem;">clear all</button>
+      </div>
+      <div id="savedList"></div>
+    </div>
+  </div>
+  <footer>your citations are saved in your browser — close anytime, they'll be here when you return</footer>
+</div>
+
+<script>
+  (function() {
+    // ----- DOM refs -----
+    const formatSelect = document.getElementById('citationFormat');
+    const authorInput = document.getElementById('author');
+    const titleInput = document.getElementById('title');
+    const yearInput = document.getElementById('year');
+    const publisherInput = document.getElementById('publisher');
+    const urlInput = document.getElementById('url');
+    const generateBtn = document.getElementById('generateBtn');
+    const clearFieldsBtn = document.getElementById('clearFieldsBtn');
+    const outputArea = document.getElementById('outputArea');
+    const citationResult = document.getElementById('citationResult');
+    const copyBtn = document.getElementById('copyBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const copyFeedback = document.getElementById('copyFeedback');
+    const savedList = document.getElementById('savedList');
+    const clearSavedBtn = document.getElementById('clearSavedBtn');
+
+    let currentCitation = '';
+
+    // ----- Citation generation logic -----
+    function generateCitation() {
+      const format = formatSelect.value;
+      const author = authorInput.value.trim();
+      const title = titleInput.value.trim();
+      const year = yearInput.value.trim();
+      const publisher = publisherInput.value.trim();
+      const url = urlInput.value.trim();
+
+      if (!author || !title || !year || !publisher) {
+        alert('Please fill in all fields (author, title, year, publisher). URL is optional.');
+        return '';
+      }
+
+      let citation = '';
+      const formattedAuthor = formatAuthor(author);
+      const formattedTitle = formatTitle(title, format);
+      const formattedPublisher = publisher;
+
+      if (format === 'mla') {
+        citation = `${formattedAuthor}. "${formattedTitle}." ${formattedPublisher}, ${year}.`;
+        if (url) citation += ` ${url}.`;
+      } else if (format === 'apa') {
+        citation = `${formattedAuthor} (${year}). ${formattedTitle}. ${formattedPublisher}.`;
+        if (url) citation += ` ${url}`;
+      } else if (format === 'chicago') {
+        citation = `${formattedAuthor}. ${formattedTitle}. ${formattedPublisher}, ${year}.`;
+        if (url) citation += ` ${url}.`;
+      }
+
+      currentCitation = citation;
+      return citation;
+    }
+
+    function formatAuthor(author) {
+      // Simple formatting: if it contains a comma, assume "Last, First" else "First Last"
+      // Just return as is for simplicity, but we can invert if needed for APA/MLA
+      return author;
+    }
+
+    function formatTitle(title, format) {
+      if (format === 'mla' || format === 'chicago') {
+        // Title case (simple)
+        return title.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+      } else if (format === 'apa') {
+        // APA uses sentence case for book titles
+        return title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
+      }
+      return title;
+    }
+
+    // ----- Display / copy / save -----
+    function displayCitation(citation) {
+      if (!citation) return;
+      outputArea.classList.add('show');
+      citationResult.textContent = citation;
+      copyFeedback.textContent = '';
+    }
+
+    function copyToClipboard() {
+      if (!currentCitation) {
+        alert('Generate a citation first.');
+        return;
+      }
+      navigator.clipboard.writeText(currentCitation).then(() => {
+        copyFeedback.textContent = '✅ copied!';
+        setTimeout(() => { copyFeedback.textContent = ''; }, 2000);
+      }).catch(() => {
+        // fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = currentCitation;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        copyFeedback.textContent = '✅ copied!';
+        setTimeout(() => { copyFeedback.textContent = ''; }, 2000);
+      });
+    }
+
+    function saveCitation() {
+      if (!currentCitation) {
+        alert('Generate a citation first.');
+        return;
+      }
+      const citations = getSavedCitations();
+      const entry = {
+        id: Date.now().toString(),
+        citation: currentCitation,
+        format: formatSelect.options[formatSelect.selectedIndex].text,
+        date: new Date().toLocaleDateString()
+      };
+      citations.unshift(entry); // newest first
+      localStorage.setItem('aurio_citations', JSON.stringify(citations));
+      renderSaved();
+      copyFeedback.textContent = '💾 saved!';
+      setTimeout(() => { copyFeedback.textContent = ''; }, 2000);
+    }
+
+    function getSavedCitations() {
+      const stored = localStorage.getItem('aurio_citations');
+      if (stored) {
+        try { return JSON.parse(stored); } catch(e) { return []; }
+      }
+      return [];
+    }
+
+    function renderSaved() {
+      const citations = getSavedCitations();
+      if (citations.length === 0) {
+        savedList.innerHTML = '<div class="empty-message">📂 no saved citations yet</div>';
+        return;
+      }
+      savedList.innerHTML = '';
+      citations.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'saved-item';
+        div.innerHTML = `
+          <span class="saved-item-text">${escapeHtml(item.citation)}</span>
+          <span class="saved-item-format">${escapeHtml(item.format)}</span>
+          <div class="saved-item-actions">
+            <button class="small-btn copy-saved" data-id="${item.id}" title="copy">📋</button>
+            <button class="small-btn delete-saved" data-id="${item.id}" title="delete">🗑️</button>
+          </div>
+        `;
+        savedList.appendChild(div);
+      });
+
+      // Attach events for saved items
+      document.querySelectorAll('.copy-saved').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.getAttribute('data-id');
+          const citations = getSavedCitations();
+          const item = citations.find(c => c.id === id);
+          if (item) {
+            navigator.clipboard.writeText(item.citation).then(() => {
+              copyFeedback.textContent = '✅ copied from saved!';
+              setTimeout(() => { copyFeedback.textContent = ''; }, 1500);
+            });
+          }
+        });
+      });
+
+      document.querySelectorAll('.delete-saved').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.getAttribute('data-id');
+          let citations = getSavedCitations();
+          citations = citations.filter(c => c.id !== id);
+          localStorage.setItem('aurio_citations', JSON.stringify(citations));
+          renderSaved();
+        });
+      });
+    }
+
+    function clearSaved() {
+      if (confirm('Remove all saved citations?')) {
+        localStorage.removeItem('aurio_citations');
+        renderSaved();
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    function clearFields() {
+      authorInput.value = '';
+      titleInput.value = '';
+      yearInput.value = '';
+      publisherInput.value = '';
+      urlInput.value = '';
+      outputArea.classList.remove('show');
+      currentCitation = '';
+      copyFeedback.textContent = '';
+    }
+
+    // ----- Event listeners -----
+    generateBtn.addEventListener('click', () => {
+      const citation = generateCitation();
+      if (citation) displayCitation(citation);
+    });
+
+    copyBtn.addEventListener('click', copyToClipboard);
+    saveBtn.addEventListener('click', saveCitation);
+    clearFieldsBtn.addEventListener('click', clearFields);
+    clearSavedBtn.addEventListener('click', clearSaved);
+
+    // Allow Enter key to generate
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          generateBtn.click();
+        }
+      });
+    });
+
+    // Initial render of saved citations
+    renderSaved();
+  })();
+</script>
+</body>
+</html>
