@@ -251,6 +251,7 @@
         <option value="mla">MLA (Modern Language Association)</option>
         <option value="apa">APA (American Psychological Association)</option>
         <option value="chicago">Chicago (Author-Date)</option>
+        <option value="harvard">Harvard (Author-Date)</option>
       </select>
     </div>
 
@@ -328,7 +329,7 @@
 
     let currentCitation = '';
 
-    // ----- Citation generation logic -----
+    // ----- Citation generation logic (with Harvard) -----
     function generateCitation() {
       const format = formatSelect.value;
       const author = authorInput.value.trim();
@@ -356,6 +357,10 @@
       } else if (format === 'chicago') {
         citation = `${formattedAuthor}. ${formattedTitle}. ${formattedPublisher}, ${year}.`;
         if (url) citation += ` ${url}.`;
+      } else if (format === 'harvard') {
+        // Harvard format: Author (Year) Title. Publisher. URL (optional)
+        citation = `${formattedAuthor} (${year}) ${formattedTitle}. ${formattedPublisher}.`;
+        if (url) citation += ` ${url}`;
       }
 
       currentCitation = citation;
@@ -363,19 +368,17 @@
     }
 
     function formatAuthor(author) {
-      // Simple formatting: if it contains a comma, assume "Last, First" else "First Last"
-      // Just return as is for simplicity, but we can invert if needed for APA/MLA
       return author;
     }
 
     function formatTitle(title, format) {
       if (format === 'mla' || format === 'chicago') {
-        // Title case (simple)
+        // Title case
         return title.replace(/\w\S*/g, function(txt) {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
-      } else if (format === 'apa') {
-        // APA uses sentence case for book titles
+      } else if (format === 'apa' || format === 'harvard') {
+        // Sentence case (APA and Harvard)
         return title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
       }
       return title;
@@ -398,7 +401,6 @@
         copyFeedback.textContent = '✅ copied!';
         setTimeout(() => { copyFeedback.textContent = ''; }, 2000);
       }).catch(() => {
-        // fallback
         const textarea = document.createElement('textarea');
         textarea.value = currentCitation;
         document.body.appendChild(textarea);
@@ -422,7 +424,7 @@
         format: formatSelect.options[formatSelect.selectedIndex].text,
         date: new Date().toLocaleDateString()
       };
-      citations.unshift(entry); // newest first
+      citations.unshift(entry);
       localStorage.setItem('aurio_citations', JSON.stringify(citations));
       renderSaved();
       copyFeedback.textContent = '💾 saved!';
@@ -444,7 +446,7 @@
         return;
       }
       savedList.innerHTML = '';
-      citations.forEach((item, index) => {
+      citations.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'saved-item';
         div.innerHTML = `
@@ -458,7 +460,6 @@
         savedList.appendChild(div);
       });
 
-      // Attach events for saved items
       document.querySelectorAll('.copy-saved').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const id = btn.getAttribute('data-id');
@@ -522,7 +523,6 @@
     clearFieldsBtn.addEventListener('click', clearFields);
     clearSavedBtn.addEventListener('click', clearSaved);
 
-    // Allow Enter key to generate
     document.querySelectorAll('input').forEach(input => {
       input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -532,7 +532,6 @@
       });
     });
 
-    // Initial render of saved citations
     renderSaved();
   })();
 </script>
